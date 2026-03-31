@@ -4,8 +4,5 @@ Allow: /
 # Sitemap
 Sitemap: https://bussysport.ch/sitemap.xml
 
-# Crawl-delay (optionnel, pour les robots moins prioritaires)
-Crawl-delay: 5
-
-# Bloquer les ressources inutiles pour les bots
+# Bloquer les endpoints non indexables
 Disallow: /contact.php
