@@ -183,7 +183,7 @@
     .reveal-d5 { transition-delay:.5s; }
 
     /* Activity cards */
-    .activity-card { position:relative; overflow:hidden; border-radius:1.25rem; cursor:default; transition:transform .35s ease, box-shadow .35s ease; }
+    .activity-card { position:relative; overflow:hidden; border-radius:1.25rem; cursor:pointer; transition:transform .35s ease, box-shadow .35s ease; }
     .activity-card:hover { transform:translateY(-7px); box-shadow:0 24px 48px rgba(0,0,0,.28); }
     .activity-card .card-img { transition:transform .55s ease; width:100%; height:100%; object-fit:cover; display:block; }
     .activity-card:hover .card-img { transform:scale(1.07); }
@@ -468,6 +468,7 @@
 
       <!-- Card 1: Courses à pied -->
       <article class="activity-card reveal reveal-d1" data-testid="card-running"
+               data-href="courses-a-pied.html" role="link" tabindex="0"
                itemscope itemtype="https://schema.org/SportsActivityLocation">
         <div class="relative h-80">
           <img class="card-img absolute inset-0"
@@ -495,7 +496,8 @@
       </article>
 
       <!-- Card 2: Cross-Training -->
-      <article class="activity-card reveal reveal-d2" data-testid="card-crosstraining">
+      <article class="activity-card reveal reveal-d2" data-testid="card-crosstraining"
+               data-href="cross-training.html" role="link" tabindex="0">
         <div class="relative h-80">
           <img class="card-img absolute inset-0"
                src="https://images.pexels.com/photos/6150627/pexels-photo-6150627.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=600&w=800"
@@ -522,7 +524,8 @@
       </article>
 
       <!-- Card 3: Street Workout -->
-      <article class="activity-card reveal reveal-d3" data-testid="card-streetworkout">
+      <article class="activity-card reveal reveal-d3" data-testid="card-streetworkout"
+               data-href="street-workout.html" role="link" tabindex="0">
         <div class="relative h-80">
           <img class="card-img absolute inset-0"
                src="https://images.pexels.com/photos/10021277/pexels-photo-10021277.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=600&w=800"
@@ -543,13 +546,14 @@
             <p class="text-white/70 text-sm leading-relaxed mb-4">
               Musculation en plein air au poids du corps. Tractions, dips, handstands — le street workout développe force et agilité. Rejoignez nos sessions urbaines à Bussigny.
             </p>
-            <a href="#contact" class="arrow-link">Découvrir <i class="fas fa-arrow-right arrow"></i></a>
+            <a href="street-workout.html" class="arrow-link">Découvrir <i class="fas fa-arrow-right arrow"></i></a>
           </div>
         </div>
       </article>
 
       <!-- Card 4: Tournois -->
-      <article class="activity-card reveal reveal-d4" data-testid="card-tournaments">
+      <article class="activity-card reveal reveal-d4" data-testid="card-tournaments"
+               data-href="tournois.html" role="link" tabindex="0">
         <div class="relative h-80">
           <img class="card-img absolute inset-0"
                src="https://images.unsplash.com/photo-1770155590999-be95c70ca378?crop=entropy&cs=srgb&fm=jpg&q=85&w=800&h=600&fit=crop"
@@ -982,6 +986,23 @@
         const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({ top: top, behavior: 'smooth' });
       }
+    });
+  });
+
+  /* ------ Activity cards: make whole card clickable ------ */
+  document.querySelectorAll('.activity-card[data-href]').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      if (e.target && e.target.closest && e.target.closest('a')) return;
+      const href = card.getAttribute('data-href');
+      if (href) window.location.href = href;
+    });
+
+    card.addEventListener('keydown', function(e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      if (e.target && e.target.closest && e.target.closest('a')) return;
+      e.preventDefault();
+      const href = card.getAttribute('data-href');
+      if (href) window.location.href = href;
     });
   });
 
