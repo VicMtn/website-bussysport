@@ -1030,6 +1030,12 @@
     successBox.classList.add('hidden');
   }
 
+  function showErrorPlain(msg) {
+    errorTxt.textContent = msg;
+    errorBox.classList.remove('hidden');
+    successBox.classList.add('hidden');
+  }
+
   function setLoading(on) {
     submitBtn.disabled = on;
     if (on) {
@@ -1057,44 +1063,54 @@
     errorBox.classList.add('hidden');
 
     if (!name || !email || !subject || !message) {
-      showError('Veuillez remplir tous les champs obligatoires.');
+      showErrorPlain('Veuillez remplir tous les champs obligatoires.');
       return;
     }
     if (!validateEmail(email)) {
-      showError('Veuillez saisir une adresse email valide.');
+      showErrorPlain('Veuillez saisir une adresse email valide.');
       return;
     }
 
     setLoading(true);
 
     const formData = new FormData(form);
+    const mailFallback =
+      'Si le problème persiste, écrivez-nous à <a href="mailto:info@bussysport.ch" class="underline font-bold">info@bussysport.ch</a>.';
 
     try {
       const response = await fetch('contact.php', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: { Accept: 'application/json' }
       });
 
-      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const raw = await response.text();
+      let data;
+      try {
+        data = JSON.parse(raw);
+      } catch (parseErr) {
+        showError(
+          'Réponse du serveur invalide. ' + mailFallback
+        );
+        return;
+      }
 
-      const data = await response.json();
-
-      if (data.success) {
+      if (data && data.success === true) {
         showSuccess(data.message);
+      } else if (data && data.message) {
+        showErrorPlain(data.message);
       } else {
-        showError(data.message || 'Une erreur est survenue lors de l\'envoi.');
+        showError(
+          'L\'envoi du message a échoué. ' + mailFallback
+        );
       }
     } catch (err) {
-      /* PHP non disponible (environnement de développement) */
       showError(
-        'Service de messagerie non disponible dans cet environnement de prévisualisation. ' +
-        'En production, le formulaire envoie bien un email via SMTP. ' +
-        'Contactez-nous directement : ' +
-        '<a href="mailto:info@bussysport.ch" class="underline font-bold">info@bussysport.ch</a>'
+        'Connexion au serveur impossible. ' + mailFallback
       );
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   });
 
 })();
