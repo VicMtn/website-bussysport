@@ -918,6 +918,7 @@
 <!-- ================================================================
      JAVASCRIPT
 ================================================================ -->
+<script src="contact-config.js"></script>
 <script>
 (function() {
   'use strict';
@@ -1073,11 +1074,68 @@
 
     setLoading(true);
 
-    const formData = new FormData(form);
     const mailFallback =
       'Si le problème persiste, écrivez-nous à <a href="mailto:info@bussysport.ch" class="underline font-bold">info@bussysport.ch</a>.';
 
+    const subjectLabels = {
+      adhesion: 'Adhésion à l\'association',
+      running: 'Courses à pied',
+      crosstraining: 'Cross-Training',
+      streetworkout: 'Street Workout',
+      tournoi: 'Tournois de jeux',
+      partenariat: 'Partenariat / Sponsor',
+      autre: 'Autre demande'
+    };
+    const subjectLabel = subjectLabels[subject] || subject;
+
+    const web3Key = (window.BUSSYSPORT_WEB3FORMS_ACCESS_KEY || '').trim();
+
     try {
+      if (web3Key) {
+        if (document.getElementById('website').value.trim()) {
+          showSuccess(
+            'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais !'
+          );
+          return;
+        }
+
+        const w3Res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: web3Key,
+            subject: '[BussySport] ' + subjectLabel + ' — ' + name,
+            name: name,
+            email: email,
+            replyto: email,
+            message: 'Sujet : ' + subjectLabel + '\n\n' + message
+          })
+        });
+
+        let w3Data;
+        try {
+          w3Data = await w3Res.json();
+        } catch (parseErr2) {
+          showError('Réponse du service d’envoi invalide. ' + mailFallback);
+          return;
+        }
+
+        if (w3Data && w3Data.success === true) {
+          showSuccess(
+            'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais !'
+          );
+        } else if (w3Data && w3Data.message) {
+          showErrorPlain(w3Data.message);
+        } else {
+          showError("Envoi impossible via le service d’email. " + mailFallback);
+        }
+        return;
+      }
+
+      const formData = new FormData(form);
       const response = await fetch('contact.php', {
         method: 'POST',
         body: formData,
@@ -1101,12 +1159,13 @@
         showErrorPlain(data.message);
       } else {
         showError(
-          'L\'envoi du message a échoué. ' + mailFallback
+          'L\'envoi du message a échoué. Envisagez Web3Forms (contact-config.js). ' +
+            mailFallback
         );
       }
     } catch (err) {
       showError(
-        'Connexion au serveur impossible. ' + mailFallback
+        'Connexion impossible. ' + mailFallback
       );
     } finally {
       setLoading(false);
