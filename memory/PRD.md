@@ -5,74 +5,76 @@
 - **Type** : Landing page statique (HTML/CSS/Tailwind CDN)
 - **Localisation** : Bussigny-près-Lausanne, 1030 Vaud, Suisse
 - **Email** : info@bussysport.ch
-- **Déploiement** : FTP server (fichiers dans /app/landing/)
+- **Déploiement cible** : FTP server
+- **URL preview** : https://6a4e283b-ddd7-4957-9d2e-6fde25cfced5.preview.emergentagent.com
 
 ## Architecture
-- **Frontend** : HTML5 pur + Tailwind CSS CDN + Font Awesome + Google Fonts (Montserrat/Inter)
-- **Serveur test** : Node.js HTTP server (port 3000)
-- **Backend** : FastAPI minimal (port 8001) - santé uniquement
-- **Contact form** : PHP SMTP handler (contact.php)
+- **Frontend** : HTML5 pur + Tailwind CSS CDN + Font Awesome 6.6 + Google Fonts (Montserrat/Inter)
+- **Serveur test** : Node.js HTTP server (port 3000) — `/app/frontend/server.js`
+- **Backend** : FastAPI minimal (port 8001) — santé uniquement
+- **Contact form** : PHP SMTP handler — `/app/landing/contact.php`
 
-## Fichiers Livrables (pour FTP)
-- `/app/landing/index.html` - Page principale
-- `/app/landing/contact.php` - Gestionnaire email SMTP
-- `/app/landing/robots.txt` - SEO robots
-- `/app/landing/sitemap.xml` - SEO sitemap
+## Fichiers Livrables (pour déploiement FTP)
+| Fichier | Description |
+|---|---|
+| `/app/landing/index.html` | Page principale complète |
+| `/app/landing/contact.php` | Handler email SMTP PHP |
+| `/app/landing/robots.txt` | Fichier robots SEO |
+| `/app/landing/sitemap.xml` | Sitemap XML SEO |
 
 ## Sections du Site
-1. **Navbar** - Sticky, transparente → dark au scroll, responsive mobile
-2. **Hero** - Plein écran, image runners, badge localisation, CTA
-3. **À Propos** - Description association, 3 piliers (Accessibilité, Communauté, Santé), stats
-4. **Activités** - 4 cartes (Running, Cross-training, Street Workout, Tournois) + "Plus à venir"
-5. **CTA Band** - Section sombre d'appel à l'action
-6. **Contact** - Formulaire AJAX + infos contact + réseaux sociaux
-7. **Footer** - Navigation, activités, réseaux, copyright suisse
+1. **Navbar** - Sticky transparente → dark navy au scroll, logo flottant, responsive mobile (hamburger)
+2. **Hero** - Plein écran, image runners, badge localisation pulsant, H1, 2 CTA, scroll indicator
+3. **À Propos** - Description association + 3 piliers + row de stats (membres, activités, CP, bénévolat)
+4. **Activités** - 4 cartes image (Running, Cross-training, Street Workout, Tournois) + coming soon banner
+5. **CTA Band** - Section navy appel à l'action
+6. **Contact** - Formulaire AJAX (4 champs + dropdown sujet) + infos + réseaux sociaux
+7. **Footer** - Logo, navigation, activités, réseaux sociaux, copyright suisse (+)
 
-## SEO / GEO (2026)
-- Balises meta complètes (description, keywords, robots, author)
-- GEO tags (geo.region, geo.placename, geo.position, ICBM)
-- Open Graph (Facebook)
-- Twitter Card
-- JSON-LD Structured Data (SportsClub, Organization, WebSite)
-- hreflang fr / fr-ch / x-default
-- Canonical URL
-- sitemap.xml + robots.txt
+## SEO / GEO Standards 2026
+- Meta: title, description, keywords, robots, author, language, theme-color
+- GEO: geo.region (CH-VD), geo.placename, geo.position, ICBM (46.5522, 6.5558)
+- Open Graph: type, url, title, description, image, locale, site_name
+- Twitter Card: summary_large_image
+- JSON-LD: SportsClub + Organization + WebSite + OfferCatalog
+- hreflang: fr, fr-ch, x-default
+- Canonical URL, sitemap.xml reference, robots.txt
+- Structured data avec adresse postale, coordonnées géographiques, areaServed
 
-## Intégrations
-- Tailwind CSS CDN (via cdn.tailwindcss.com)
-- Font Awesome 6.6.0 CDN
-- Google Fonts CDN (Montserrat + Inter)
-- Images : Pexels + Unsplash (hotlinking)
-- Contact : PHP mail() avec option PHPMailer SMTP
-
-## Animations
-- Fade-in-down/up sur les éléments hero (au chargement)
-- Scroll reveal via Intersection Observer
-- Float animation sur le logo
-- Hover lift sur les cartes activités (avec zoom image)
-- Pulse CTA button
-- Navbar transition transparente → sombre au scroll
+## Animations Implémentées
+- Fade-in-down/up sur hero (chargement initial)
+- Float continu sur le logo navbar
+- Blink sur le badge de localisation hero
+- Scroll reveal via Intersection Observer (tous les éléments majeurs)
+- Hover lift + zoom image sur les cartes activités
+- Hover lift sur les feature cards
+- Pulse CTA button (animation shadow)
+- Navbar transition transparente → navy au scroll
+- Arrow animated sur les liens "Rejoindre"
 
 ## Réseaux Sociaux (liens à corriger par le client)
-- Instagram : https://www.instagram.com/bussysport
-- Facebook : https://www.facebook.com/bussysport
+- Instagram : https://www.instagram.com/bussysport (À CORRIGER)
+- Facebook : https://www.facebook.com/bussysport (À CORRIGER)
 
-## Statut d'Implémentation (21 mars 2025)
-- [x] Structure HTML complète
-- [x] SEO/GEO optimisé 2026
-- [x] JSON-LD Structured Data
-- [x] Toutes les sections actives
-- [x] Animations et micro-interactions
-- [x] Formulaire de contact (AJAX → contact.php)
-- [x] PHP SMTP handler
-- [x] robots.txt + sitemap.xml
-- [x] Design responsive (mobile + desktop)
+## Tests (21 mars 2025)
+- **15/15 tests passés (100%)**
+- Navbar, Hero, About, 4 Activity cards, Banner, Contact form
+- Mobile hamburger, Smooth scroll, Form validation, SEO meta
+- Note: contact.php MOCKÉ en environnement Node.js (fonctionnel en production FTP/PHP)
 
-## Backlog / Prochaines Étapes
-- P1: Corriger les liens réseaux sociaux (Instagram/Facebook)
-- P1: Remplacer le logo dans index.html par chemin relatif `images/logo.jpg`
-- P2: Ajouter une section "Événements" ou calendrier des activités
-- P2: Intégrer Google Maps avec localisation Bussigny
-- P2: Ajouter version DE/EN pour localisation future
-- P3: Newsletter signup
-- P3: Galerie photos des événements
+## Backlog Prioritaire
+### P0 - Immédiat
+- [ ] Corriger les liens réseaux sociaux réels (Instagram/Facebook)
+- [ ] Remplacer la référence CDN du logo par `images/logo.jpg` + déposer le logo dans `/images/`
+- [ ] Tester l'envoi email sur le serveur FTP de production
+
+### P1 - Prochaine itération
+- [ ] Ajouter Google Maps embed section localisation
+- [ ] Section événements / calendrier des activités
+- [ ] Intégration PHPMailer SMTP avec identifiants hébergeur
+
+### P2 - Futur
+- [ ] Versions DE/EN (i18n)
+- [ ] Newsletter signup
+- [ ] Galerie photos des événements
+- [ ] Blog / actualités
