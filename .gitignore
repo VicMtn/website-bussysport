@@ -13,3 +13,7 @@
 .emergent/
 .cursor/
 .vscode/
+
+# Memory files
+memory/
+test_reports/
