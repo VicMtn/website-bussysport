@@ -13,28 +13,41 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bussysport.ch/" />
   </url>
 
-  <!-- Section : À Propos (ancre) -->
+  <!-- Pages activités -->
   <url>
-    <loc>https://bussysport.ch/#apropos</loc>
+    <loc>https://bussysport.ch/courses-a-pied.html</loc>
     <lastmod>2025-03-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Section : Activités (ancre) -->
   <url>
-    <loc>https://bussysport.ch/#activites</loc>
+    <loc>https://bussysport.ch/cross-training.html</loc>
     <lastmod>2025-03-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Section : Contact (ancre) -->
   <url>
-    <loc>https://bussysport.ch/#contact</loc>
+    <loc>https://bussysport.ch/street-workout.html</loc>
     <lastmod>2025-03-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://bussysport.ch/tournois.html</loc>
+    <lastmod>2025-03-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Mentions légales -->
+  <url>
+    <loc>https://bussysport.ch/mentions-legales.html</loc>
+    <lastmod>2025-03-21</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
   </url>
 
 </urlset>
