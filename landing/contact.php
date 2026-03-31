@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 /**
  * BussySport – Gestionnaire de formulaire de contact
  * ====================================================
@@ -10,15 +12,25 @@
  * fournis par votre hébergeur.
  */
 
-header('Content-Type: application/json; charset=utf-8');
-header('X-Content-Type-Options: nosniff');
-header('Cache-Control: no-store, max-age=0');
+/**
+ * @param array<string, mixed> $payload
+ */
+function bs_contact_json(array $payload, int $status = 200): void
+{
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+    http_response_code($status);
+    header('Content-Type: application/json; charset=utf-8');
+    header('X-Content-Type-Options: nosniff');
+    header('Cache-Control: no-store, max-age=0');
+    echo json_encode($payload);
+    exit;
+}
 
 // Refuser les requêtes non-POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
-    exit;
+    bs_contact_json(['success' => false, 'message' => 'Méthode non autorisée.'], 405);
 }
 
 // Rejeter les POST cross-origin (si l'en-tête Origin est présent)
@@ -26,10 +38,13 @@ $host = $_SERVER['HTTP_HOST'] ?? '';
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (!empty($origin) && !empty($host)) {
     $originHost = parse_url($origin, PHP_URL_HOST);
-    if (!empty($originHost) && strcasecmp($originHost, $host) !== 0) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Requête non autorisée.']);
-        exit;
+    if (!empty($originHost)) {
+        $norm = static function ($h) {
+            return strtolower(preg_replace('/^www\./i', '', $h));
+        };
+        if ($norm($originHost) !== $norm($host)) {
+            bs_contact_json(['success' => false, 'message' => 'Requête non autorisée.'], 403);
+        }
     }
 }
 
@@ -42,24 +57,20 @@ $website = trim($_POST['website'] ?? '');
 
 // ── Validation ────────────────────────────────────────────────────────────────
 if (empty($name) || empty($email) || empty($subject) || empty($message)) {
-    echo json_encode(['success' => false, 'message' => 'Tous les champs sont obligatoires.']);
-    exit;
+    bs_contact_json(['success' => false, 'message' => 'Tous les champs sont obligatoires.'], 400);
 }
 
 // Honeypot anti-spam: champ censé rester vide
 if (!empty($website)) {
-    echo json_encode(['success' => true, 'message' => 'Votre message a bien été envoyé.']);
-    exit;
+    bs_contact_json(['success' => true, 'message' => 'Votre message a bien été envoyé.']);
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    echo json_encode(['success' => false, 'message' => 'Adresse email invalide.']);
-    exit;
+    bs_contact_json(['success' => false, 'message' => 'Adresse email invalide.'], 400);
 }
 
 if (strlen($message) > 5000) {
-    echo json_encode(['success' => false, 'message' => 'Le message est trop long (max 5000 caractères).']);
-    exit;
+    bs_contact_json(['success' => false, 'message' => 'Le message est trop long (max 5000 caractères).'], 400);
 }
 
 // ── Destinataire ──────────────────────────────────────────────────────────────
@@ -168,14 +179,13 @@ $sent = mail($to, $mailSubject, $htmlBody, $headers);
 //
 
 if ($sent) {
-    echo json_encode([
+    bs_contact_json([
         'success' => true,
-        'message' => 'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais !'
-    ]);
-} else {
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Une erreur est survenue lors de l\'envoi. Veuillez nous contacter directement à info@bussysport.ch'
+        'message' => 'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais !',
     ]);
 }
+
+bs_contact_json([
+    'success' => false,
+    'message' => 'Une erreur est survenue lors de l\'envoi. Veuillez nous contacter directement à info@bussysport.ch',
+], 500);
