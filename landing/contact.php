@@ -11,8 +11,8 @@
  */
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
 header('X-Content-Type-Options: nosniff');
+header('Cache-Control: no-store, max-age=0');
 
 // Refuser les requêtes non-POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -21,15 +21,34 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// Rejeter les POST cross-origin (si l'en-tête Origin est présent)
+$host = $_SERVER['HTTP_HOST'] ?? '';
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (!empty($origin) && !empty($host)) {
+    $originHost = parse_url($origin, PHP_URL_HOST);
+    if (!empty($originHost) && strcasecmp($originHost, $host) !== 0) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Requête non autorisée.']);
+        exit;
+    }
+}
+
 // ── Récupération et nettoyage des champs ──────────────────────────────────────
 $name    = trim(htmlspecialchars(strip_tags($_POST['name']    ?? ''), ENT_QUOTES, 'UTF-8'));
 $email   = trim(filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL));
 $subject = trim(htmlspecialchars(strip_tags($_POST['subject'] ?? ''), ENT_QUOTES, 'UTF-8'));
 $message = trim(htmlspecialchars(strip_tags($_POST['message'] ?? ''), ENT_QUOTES, 'UTF-8'));
+$website = trim($_POST['website'] ?? '');
 
 // ── Validation ────────────────────────────────────────────────────────────────
 if (empty($name) || empty($email) || empty($subject) || empty($message)) {
     echo json_encode(['success' => false, 'message' => 'Tous les champs sont obligatoires.']);
+    exit;
+}
+
+// Honeypot anti-spam: champ censé rester vide
+if (!empty($website)) {
+    echo json_encode(['success' => true, 'message' => 'Votre message a bien été envoyé.']);
     exit;
 }
 
@@ -106,7 +125,7 @@ $htmlBody = '<!DOCTYPE html>
 // ── En-têtes de l'email ───────────────────────────────────────────────────────
 $headers  = 'MIME-Version: 1.0' . "\r\n";
 $headers .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
-$headers .= 'From: BussySport <noreply@bussysport.ch>' . "\r\n";
+$headers .= 'From: BussySport <info@bussysport.ch>' . "\r\n";
 $headers .= 'Reply-To: ' . $name . ' <' . $email . '>' . "\r\n";
 $headers .= 'X-Mailer: PHP/' . phpversion() . "\r\n";
 
