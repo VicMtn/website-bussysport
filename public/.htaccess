@@ -1,0 +1,41 @@
+# BussySport — Apache configuration for shared hosting / FTP deployment.
+
+# 1) Compress text assets
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# 2) Long-cache static assets (hashed by Vite)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css                "access plus 1 year"
+  ExpiresByType application/javascript  "access plus 1 year"
+  ExpiresByType image/jpeg              "access plus 1 month"
+  ExpiresByType image/png               "access plus 1 month"
+  ExpiresByType image/svg+xml           "access plus 1 month"
+  ExpiresByType image/webp              "access plus 1 month"
+  ExpiresByType font/woff2              "access plus 1 year"
+  # HTML stays short so SPA shell updates are picked up quickly.
+  ExpiresByType text/html               "access plus 5 minutes"
+</IfModule>
+
+# 3) Vue Router history-mode fallback
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Let real files (assets, contact.php, sitemap.xml, etc.) through.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else → SPA shell.
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# 4) Hardening
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
