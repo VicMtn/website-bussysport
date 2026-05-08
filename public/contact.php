@@ -19,6 +19,14 @@ const BS_MAX_MESSAGE_LEN  = 5000;
 const BS_RATE_LIMIT_MAX   = 5;       // requêtes par fenêtre
 const BS_RATE_LIMIT_WIN   = 600;     // 10 minutes (en secondes)
 
+// Faire confiance aux en-têtes de proxy pour identifier l'IP cliente.
+// - false (défaut) : utilise REMOTE_ADDR. Sécurisé en accès direct.
+// - true           : préfère CF-Connecting-IP, X-Real-IP puis le premier
+//   segment de X-Forwarded-For. À n'activer QUE si le site est servi
+//   derrière un reverse-proxy / CDN de confiance (Cloudflare, etc.) ;
+//   sinon un client peut spoofer son IP en envoyant ces en-têtes.
+const BS_TRUST_PROXY      = false;
+
 // Sujets autorisés (doivent matcher la liste dans le formulaire Vue).
 const BS_ALLOWED_SUBJECTS = [
     'adhesion'      => "Adhésion à l'association",
@@ -55,16 +63,50 @@ function bs_strip_header_chars(string $value): string
 }
 
 /**
+ * Resolve the client IP. CF-Connecting-IP is the only header Cloudflare
+ * lets pass through to the origin (and overwrites if a client tries to
+ * spoof it), so it's safe to read when present. Generic proxy headers
+ * (X-Real-IP, X-Forwarded-For) are only consulted if BS_TRUST_PROXY is
+ * explicitly enabled — otherwise a direct client could spoof them.
+ */
+function bs_client_ip(): string
+{
+    $cfIp = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? '';
+    if ($cfIp !== '' && filter_var($cfIp, FILTER_VALIDATE_IP) !== false) {
+        return $cfIp;
+    }
+
+    if (BS_TRUST_PROXY) {
+        $realIp = $_SERVER['HTTP_X_REAL_IP'] ?? '';
+        if ($realIp !== '' && filter_var($realIp, FILTER_VALIDATE_IP) !== false) {
+            return $realIp;
+        }
+        $xff = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '';
+        if ($xff !== '') {
+            $first = trim(explode(',', $xff)[0] ?? '');
+            if ($first !== '' && filter_var($first, FILTER_VALIDATE_IP) !== false) {
+                return $first;
+            }
+        }
+    }
+
+    return $_SERVER['REMOTE_ADDR'] ?? '';
+}
+
+/**
  * File-based rate limiter. Keeps a JSON file under sys_get_temp_dir() with one
  * entry per IP — simple, no DB, safe on shared hosting.
  *
- * Returns true when the request is allowed, false when the IP exceeded the
- * limit within the rolling window.
+ * Returns ['allowed' => bool, 'retry_after' => int]:
+ *   - allowed     : false when the IP exceeded the limit in the rolling window
+ *   - retry_after : seconds until the bucket resets (>=1 when blocked)
  */
-function bs_rate_limit_ok(string $ip): bool
+function bs_rate_limit_check(string $ip): array
 {
     if ($ip === '') {
-        return true; // can't track without an IP — let it through
+        // No IP → can't track. Fail open so a misconfigured proxy doesn't
+        // lock the form for everyone.
+        return ['allowed' => true, 'retry_after' => 0];
     }
     $path = sys_get_temp_dir() . '/bussysport-rate.json';
     $now  = time();
@@ -72,42 +114,47 @@ function bs_rate_limit_ok(string $ip): bool
 
     $fh = @fopen($path, 'c+');
     if ($fh === false) {
-        return true; // I/O issue — fail open rather than locking the form
+        return ['allowed' => true, 'retry_after' => 0]; // I/O issue → fail open
     }
-    if (flock($fh, LOCK_EX)) {
-        $raw = stream_get_contents($fh);
-        if ($raw !== false && $raw !== '') {
-            $decoded = json_decode($raw, true);
-            if (is_array($decoded)) {
-                $data = $decoded;
-            }
-        }
-
-        // Drop entries outside the rolling window.
-        foreach ($data as $key => $bucket) {
-            if (!is_array($bucket) || ($bucket['ts'] ?? 0) < $now - BS_RATE_LIMIT_WIN) {
-                unset($data[$key]);
-            }
-        }
-
-        $bucket = $data[$ip] ?? ['count' => 0, 'ts' => $now];
-        if ($bucket['ts'] < $now - BS_RATE_LIMIT_WIN) {
-            $bucket = ['count' => 0, 'ts' => $now];
-        }
-        $bucket['count']++;
-        $data[$ip] = $bucket;
-
-        ftruncate($fh, 0);
-        rewind($fh);
-        fwrite($fh, json_encode($data));
-        fflush($fh);
-        flock($fh, LOCK_UN);
+    if (!flock($fh, LOCK_EX)) {
         fclose($fh);
-
-        return $bucket['count'] <= BS_RATE_LIMIT_MAX;
+        return ['allowed' => true, 'retry_after' => 0];
     }
+
+    $raw = stream_get_contents($fh);
+    if ($raw !== false && $raw !== '') {
+        $decoded = json_decode($raw, true);
+        if (is_array($decoded)) {
+            $data = $decoded;
+        }
+    }
+
+    // Drop entries outside the rolling window.
+    foreach ($data as $key => $bucket) {
+        if (!is_array($bucket) || ($bucket['ts'] ?? 0) < $now - BS_RATE_LIMIT_WIN) {
+            unset($data[$key]);
+        }
+    }
+
+    $bucket = $data[$ip] ?? ['count' => 0, 'ts' => $now];
+    if ($bucket['ts'] < $now - BS_RATE_LIMIT_WIN) {
+        $bucket = ['count' => 0, 'ts' => $now];
+    }
+    $bucket['count']++;
+    $data[$ip] = $bucket;
+
+    ftruncate($fh, 0);
+    rewind($fh);
+    fwrite($fh, json_encode($data));
+    fflush($fh);
+    flock($fh, LOCK_UN);
     fclose($fh);
-    return true;
+
+    if ($bucket['count'] <= BS_RATE_LIMIT_MAX) {
+        return ['allowed' => true, 'retry_after' => 0];
+    }
+    $retryAfter = max(1, ($bucket['ts'] + BS_RATE_LIMIT_WIN) - $now);
+    return ['allowed' => false, 'retry_after' => $retryAfter];
 }
 
 // ── Refuser les requêtes non-POST ────────────────────────────────────────────
@@ -131,11 +178,16 @@ if ($origin !== '' && $host !== '') {
 }
 
 // ── Rate limit ───────────────────────────────────────────────────────────────
-$clientIp = $_SERVER['REMOTE_ADDR'] ?? '';
-if (!bs_rate_limit_ok($clientIp)) {
+$clientIp  = bs_client_ip();
+$rateCheck = bs_rate_limit_check($clientIp);
+if (!$rateCheck['allowed']) {
+    // Standard HTTP signal so well-behaved clients (and the browser-side
+    // throttle in useSubmissionThrottle.js) can back off correctly.
+    header('Retry-After: ' . $rateCheck['retry_after']);
     bs_contact_json([
-        'success' => false,
-        'message' => 'Trop de tentatives. Merci de réessayer dans quelques minutes.',
+        'success'     => false,
+        'message'     => 'Trop de tentatives. Merci de réessayer dans quelques minutes.',
+        'retry_after' => $rateCheck['retry_after'],
     ], 429);
 }
 
