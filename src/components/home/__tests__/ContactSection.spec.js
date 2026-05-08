@@ -19,6 +19,7 @@ function jsonResponse(body) {
 describe('ContactSection.vue', () => {
   beforeEach(() => {
     window.BUSSYSPORT_WEB3FORMS_ACCESS_KEY = ''
+    window.localStorage.clear()
   })
 
   afterEach(() => {
@@ -118,6 +119,29 @@ describe('ContactSection.vue', () => {
     await submission
     await flushPromises()
 
-    expect(button.attributes('disabled')).toBeUndefined()
+    // After completion the button stays disabled — but now it's the cooldown
+    // countdown (post-submit throttle), no longer the in-flight spinner.
+    expect(button.text()).not.toContain('Envoi en cours')
+    expect(button.text()).toMatch(/Patientez \d+ s/)
+  })
+
+  it('blocks an immediate second submit and shows the cooldown countdown', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      jsonResponse({ success: true, message: 'OK' }),
+    )
+    const wrapper = mount(ContactSection, { global: stubs })
+
+    await wrapper.find('[data-testid="contact-name-input"]').setValue('Jean')
+    await wrapper.find('[data-testid="contact-email-input"]').setValue('jean@example.com')
+    await wrapper.find('[data-testid="contact-subject-select"]').setValue('adhesion')
+    await wrapper.find('[data-testid="contact-message-textarea"]').setValue('Hello')
+    await wrapper.find('form').trigger('submit.prevent')
+    await flushPromises()
+
+    const button = wrapper.find('[data-testid="contact-submit-btn"]')
+    expect(button.attributes('disabled')).toBeDefined()
+    expect(wrapper.find('[data-testid="contact-cooldown"]').text()).toMatch(
+      /Patientez \d+ s/,
+    )
   })
 })

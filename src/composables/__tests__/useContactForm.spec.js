@@ -31,6 +31,7 @@ function rawResponse(text, ok = true) {
 describe('useContactForm', () => {
   beforeEach(() => {
     window.BUSSYSPORT_WEB3FORMS_ACCESS_KEY = ''
+    window.localStorage.clear()
     vi.useFakeTimers()
   })
 
@@ -242,6 +243,62 @@ describe('useContactForm', () => {
       await submission
 
       expect(loading.value).toBe(false)
+    })
+  })
+
+  describe('client-side throttle', () => {
+    it('blocks an immediate second submission with a cooldown message', async () => {
+      const fetchSpy = vi
+        .spyOn(globalThis, 'fetch')
+        .mockResolvedValue(jsonResponse({ success: true, message: 'OK' }))
+      const { form, errorHtml, cooldownLeft, submit } = useContactForm()
+      fillForm(form)
+
+      await submit()
+      expect(fetchSpy).toHaveBeenCalledTimes(1)
+      expect(cooldownLeft.value).toBeGreaterThan(0)
+
+      // Refill (success path resets the form) and try again immediately.
+      fillForm(form)
+      await submit()
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1)
+      expect(errorHtml.value).toMatch(/Merci de patienter \d+ secondes? avant/)
+    })
+
+    it('does not consume the cooldown when validation fails', async () => {
+      const fetchSpy = vi
+        .spyOn(globalThis, 'fetch')
+        .mockResolvedValue(jsonResponse({ success: true, message: 'OK' }))
+      const { form, submit } = useContactForm()
+
+      // 1) Validation failure (bad email) — bails before consuming the slot.
+      fillForm(form, { email: 'not-an-email' })
+      await submit()
+      expect(fetchSpy).not.toHaveBeenCalled()
+
+      // 2) Now submit a valid form — must go through, since the throttle was
+      //    never consumed by the previous failed attempt.
+      fillForm(form)
+      await submit()
+      expect(fetchSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('honours a cooldown left by a previous instance via localStorage', async () => {
+      // Simulate a previous successful submission persisted across reloads.
+      window.localStorage.setItem(
+        'bussysport:contact:lastSubmit',
+        String(Date.now()),
+      )
+
+      const fetchSpy = vi.spyOn(globalThis, 'fetch')
+      const { form, errorHtml, submit } = useContactForm()
+      fillForm(form)
+
+      await submit()
+
+      expect(fetchSpy).not.toHaveBeenCalled()
+      expect(errorHtml.value).toContain('Merci de patienter')
     })
   })
 
