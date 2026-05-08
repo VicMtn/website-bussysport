@@ -1,0 +1,19 @@
+# Ignore all files in the -e directory
+-e/
+
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*
+
+# Editor files
+.emergent/
+.cursor/
+.vscode/
+
+# Memory files
+memory/
+test_reports/

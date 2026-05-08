@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://bussysport.ch/sitemap.xml
+
+# Bloquer les endpoints non indexables
+Disallow: /contact.php
