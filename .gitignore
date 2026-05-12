@@ -1,10 +1,14 @@
-# Ignore all files in the -e directory
--e/
+# Dependencies
+node_modules/
 
-# Environment files
-*.env
-*.env.*
--e 
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Vite cache
+.vite/
+
 # Environment files
 *.env
 *.env.*
@@ -13,7 +17,27 @@
 .emergent/
 .cursor/
 .vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Memory files
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Project-specific
 memory/
 test_reports/
+
+# Legacy
+-e/
+-e
