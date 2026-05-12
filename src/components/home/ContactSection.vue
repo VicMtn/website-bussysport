@@ -1,7 +1,8 @@
 <script setup>
 import { useContactForm } from '@/composables/useContactForm'
 
-const { form, loading, successText, errorHtml, submit } = useContactForm()
+const { form, loading, successText, errorHtml, cooldownLeft, submit } =
+  useContactForm()
 </script>
 
 <template>
@@ -232,15 +233,26 @@ const { form, loading, successText, errorHtml, submit } = useContactForm()
 
             <button
               type="submit"
-              :disabled="loading"
+              :disabled="loading || cooldownLeft > 0"
               class="btn-primary w-full py-4 rounded-xl font-bold text-base flex items-center justify-center gap-3"
               data-testid="contact-submit-btn"
             >
               <i
-                :class="['fas', loading ? 'fa-spinner fa-spin-anim' : 'fa-paper-plane']"
+                :class="[
+                  'fas',
+                  loading
+                    ? 'fa-spinner fa-spin-anim'
+                    : cooldownLeft > 0
+                      ? 'fa-hourglass-half'
+                      : 'fa-paper-plane',
+                ]"
                 aria-hidden="true"
               ></i>
-              <span>{{ loading ? 'Envoi en cours…' : 'Envoyer le message' }}</span>
+              <span v-if="loading">Envoi en cours…</span>
+              <span v-else-if="cooldownLeft > 0" data-testid="contact-cooldown">
+                Patientez {{ cooldownLeft }} s
+              </span>
+              <span v-else>Envoyer le message</span>
             </button>
 
             <p class="text-xs text-gray-400 text-center leading-relaxed">

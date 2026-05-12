@@ -1,4 +1,5 @@
 import { reactive, ref } from 'vue'
+import { useSubmissionThrottle } from './useSubmissionThrottle'
 
 const SUBJECT_LABELS = {
   adhesion: "Adhésion à l'association",
@@ -17,7 +18,7 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
-export function useContactForm() {
+export function useContactForm({ throttle } = {}) {
   const form = reactive({
     name: '',
     email: '',
@@ -26,6 +27,9 @@ export function useContactForm() {
     website: '', // honeypot
   })
 
+  // Browser-side rate limiter — see useSubmissionThrottle.
+  // Injectable so tests can supply a deterministic clock.
+  const submissionThrottle = throttle ?? useSubmissionThrottle()
   const loading = ref(false)
   const successText = ref('')
   const errorHtml = ref('')
@@ -83,6 +87,13 @@ export function useContactForm() {
       return
     }
 
+    if (!submissionThrottle.tryConsume()) {
+      const seconds = submissionThrottle.cooldownLeft.value
+      showErrorPlain(
+        `Merci de patienter ${seconds} seconde${seconds > 1 ? 's' : ''} avant de renvoyer un message.`,
+      )
+      return
+    }
     loading.value = true
     const subjectLabel = SUBJECT_LABELS[subject] || subject
     const web3Key = (window.BUSSYSPORT_WEB3FORMS_ACCESS_KEY || '').trim()
@@ -175,5 +186,12 @@ export function useContactForm() {
     }
   }
 
-  return { form, loading, successText, errorHtml, submit }
+  return {
+    form,
+    loading,
+    successText,
+    errorHtml,
+    submit,
+    cooldownLeft: submissionThrottle.cooldownLeft,
+  }
 }

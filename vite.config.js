@@ -22,4 +22,15 @@ export default defineConfig({
     target: 'es2022',
     sourcemap: false,
   },
+
+  test: {
+    environment: 'happy-dom',
+    globals: false,
+    include: ['src/**/*.spec.js'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{js,vue}'],
+      exclude: ['src/main.js', 'src/router/**', 'src/views/**'],
+    },
+  },
 })
