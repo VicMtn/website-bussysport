@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Courses à Pied – Bussigny | BussySport</title>
+  <meta name="description"
+    content="Rejoignez les sorties running de BussySport à Bussigny. Courses à pied pour tous niveaux – débutants à confirmés. Convivial, hebdomadaire, en plein air." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://bussysport.ch/courses-a-pied" />
+  <meta property="og:title" content="Courses à Pied – BussySport Bussigny" />
+  <meta property="og:description" content="Sorties running hebdomadaires à Bussigny pour tous les niveaux." />
+  <link rel="canonical" href="https://bussysport.ch/courses-a-pied" />
+  <link rel="icon" type="image/jpeg" href="images/logo.jpeg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: "#1565C0",
+              dark: "#0D47A1",
+              light: "#29B6F6",
+            },
+            navy: "#0D2137",
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            display: ["Montserrat", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      color: #1a202c;
+      background: #fff;
+      overflow-x: hidden;
+    }
+
+    #navbar {
+      background: rgba(13, 33, 55, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .hero-overlay {
+      background: linear-gradient(to bottom,
+          rgba(13, 33, 55, 0.88) 0%,
+          rgba(13, 33, 55, 0.55) 50%,
+          rgba(13, 33, 55, 0.85) 100%);
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes widthIn {
+      from { width: 0; }
+      to   { width: 60px; }
+    }
+
+    @keyframes bounceSlow {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(-10px); }
+    }
+
+    @keyframes pulseCta {
+      0%   { box-shadow: 0 0 0 0 rgba(41, 182, 246, 0.55); }
+      70%  { box-shadow: 0 0 0 14px rgba(41, 182, 246, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(41, 182, 246, 0); }
+    }
+
+    .hero-badge { animation: fadeInDown 0.65s ease 0.2s both; }
+    .hero-title { animation: fadeInUp  0.8s  ease 0.4s both; }
+    .hero-sub   { animation: fadeInUp  0.8s  ease 0.6s both; }
+    .hero-cta   { animation: fadeInUp  0.8s  ease 0.8s both; }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounceSlow 2s ease-in-out infinite;
+    }
+
+    .btn-pulse { animation: pulseCta 2.2s ease-in-out infinite; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
+
+    .btn-primary {
+      background: #1565c0;
+      color: #fff;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background: #0d47a1;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(21, 101, 192, 0.45);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-outline {
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      color: #fff;
+      transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-outline:hover {
+      background: #fff;
+      color: #0d2137;
+      transform: translateY(-2px);
+    }
+
+    .feature-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(21, 101, 192, 0.12);
+    }
+
+    .step-line {
+      position: relative;
+    }
+
+    .step-line::before {
+      content: "";
+      position: absolute;
+      left: 2.75rem;
+      top: 4.25rem;
+      bottom: -1.25rem;
+      width: 2px;
+      background: linear-gradient(to bottom, rgba(21, 101, 192, 0.4), rgba(21, 101, 192, 0));
+    }
+
+    .activity-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.25rem;
+      cursor: pointer;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .activity-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+    }
+
+    .activity-card .card-img {
+      transition: transform 0.55s ease;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .activity-card:hover .card-img {
+      transform: scale(1.07);
+    }
+
+    .card-overlay {
+      background: linear-gradient(to top,
+          rgba(13, 33, 55, 0.96) 0%,
+          rgba(13, 33, 55, 0.45) 55%,
+          rgba(13, 33, 55, 0.05) 100%);
+    }
+
+    .arrow-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      transition: color 0.25s ease;
+    }
+
+    .arrow-link:hover { color: #fff; }
+
+    .arrow-link .arrow { transition: transform 0.25s ease; }
+
+    .arrow-link:hover .arrow { transform: translateX(4px); }
+
+    .info-box {
+      background: #f0f7ff;
+      border: 1px solid rgba(21, 101, 192, 0.15);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+    }
+
+    .sec-title {
+      position: relative;
+      display: inline-block;
+    }
+
+    .sec-title::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 4px;
+      background: linear-gradient(to right, #1565c0, #29b6f6);
+      border-radius: 2px;
+      margin: 0.75rem auto 0;
+      animation: widthIn 0.7s ease 0.5s forwards;
+    }
+
+    .swiss-line {
+      width: 36px;
+      height: 4px;
+      background: linear-gradient(to right, #d32f2f, #ef5350);
+      border-radius: 2px;
+    }
+
+    .social-icon {
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-3px) scale(1.1);
+      background: rgba(41, 182, 246, 0.25) !important;
+    }
+
+    #mobile-menu {
+      transition: max-height 0.35s ease;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #f0f0f0; }
+    ::-webkit-scrollbar-thumb { background: #1565c0; border-radius: 4px; }
+  </style>
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3" aria-label="BussySport – Accueil">
+        <img src="images/logo.jpeg" alt="Logo BussySport" class="h-12 w-12 rounded-full object-cover shadow-lg"
+          width="48" height="48" />
+        <div>
+          <div class="font-display font-black text-xl text-white leading-none">BussySport</div>
+          <div class="text-xs text-white/50 font-medium tracking-wide mt-0.5">Bussigny · 1030 VD</div>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="index.html#apropos"
+          class="text-white/80 hover:text-white text-sm font-semibold tracking-wide transition-colors">Notre Association</a>
+        <a href="index.html#activites"
+          class="text-white/80 hover:text-white text-sm font-semibold tracking-wide transition-colors">Activités</a>
+        <a href="index.html#contact"
+          class="text-white/80 hover:text-white text-sm font-semibold tracking-wide transition-colors">Contact</a>
+        <a href="index.html#contact"
+          class="btn-primary px-6 py-2.5 rounded-full font-bold text-sm inline-flex items-center gap-2">
+          <i class="fas fa-plus text-xs"></i>Rejoindre
+        </a>
+      </div>
+      <button id="hamburger" class="md:hidden text-white p-2.5 rounded-xl hover:bg-white/10 transition-colors"
+        aria-label="Menu">
+        <i id="hamburger-icon" class="fas fa-bars text-xl"></i>
+      </button>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden mt-3 mx-4 rounded-2xl overflow-hidden" style="
+          background: rgba(13, 33, 55, 0.97);
+          backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        ">
+      <div class="flex flex-col py-2">
+        <a href="index.html#apropos" onclick="closeMobileMenu()"
+          class="px-6 py-3.5 text-white/80 hover:text-white font-semibold text-sm">Notre Association</a>
+        <a href="index.html#activites" onclick="closeMobileMenu()"
+          class="px-6 py-3.5 text-white/80 hover:text-white font-semibold text-sm">Activités</a>
+        <a href="index.html#contact" onclick="closeMobileMenu()"
+          class="px-6 py-3.5 text-white/80 hover:text-white font-semibold text-sm">Contact</a>
+        <div class="px-5 py-4 border-t border-white/10 mt-1">
+          <a href="index.html#contact" class="btn-primary block text-center py-3.5 rounded-xl font-bold text-sm">
+            <i class="fas fa-plus mr-2 text-xs"></i>Nous Rejoindre
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative min-h-[70vh] flex items-center justify-center overflow-hidden pt-28 pb-16">
+    <div class="absolute inset-0">
+      <img
+        src="https://images.pexels.com/photos/3638093/pexels-photo-3638093.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1080&w=1920"
+        alt="Courses à pied BussySport Bussigny" class="w-full h-full object-cover" loading="eager"
+        fetchpriority="high" />
+      <div class="hero-overlay absolute inset-0"></div>
+    </div>
+
+    <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
+      <!-- Breadcrumb pill -->
+      <div class="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6" style="
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+          ">
+        <a href="index.html"
+          class="text-xs font-bold tracking-widest text-white/70 uppercase hover:text-white transition-colors">ACCUEIL</a>
+        <span class="text-white/30">·</span>
+        <a href="index.html#activites"
+          class="text-xs font-bold tracking-widest text-white/70 uppercase hover:text-white transition-colors">ACTIVITÉS</a>
+        <span class="text-white/30">·</span>
+        <span class="text-xs font-bold tracking-widest text-white/90 uppercase">COURSES À PIED</span>
+      </div>
+
+      <!-- Activity icon -->
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 hero-badge" style="
+            background: rgba(41, 182, 246, 0.18);
+            border: 2px solid rgba(41, 182, 246, 0.4);
+            backdrop-filter: blur(8px);
+          ">
+        <i class="fas fa-person-running text-3xl" style="color: #29b6f6" aria-hidden="true"></i>
+      </div>
+
+      <h1 class="hero-title font-display font-black text-white leading-tight mb-6"
+        style="font-size: clamp(2.5rem, 6vw, 4.5rem)">
+        Courses à Pied
+      </h1>
+
+      <p class="hero-sub text-white/80 max-w-2xl mx-auto mb-8 leading-relaxed"
+        style="font-size: clamp(1rem, 2vw, 1.2rem)">
+        Courez ensemble, avancez plus loin. Des sorties running hebdomadaires pour tous les niveaux, dans la bonne
+        humeur et au grand air de Bussigny.
+      </p>
+
+      <div class="hero-cta flex flex-wrap justify-center gap-3 mb-8">
+        <span class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider text-white" style="
+              background: rgba(255, 255, 255, 0.1);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+            ">Tous niveaux</span>
+        <span class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider text-white" style="
+              background: rgba(255, 255, 255, 0.1);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+            ">Cardio</span>
+        <span class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider text-white" style="
+              background: rgba(255, 255, 255, 0.1);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+            ">Plein air</span>
+        <span class="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider text-white" style="
+              background: rgba(255, 255, 255, 0.1);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+            ">Hebdomadaire</span>
+      </div>
+
+      <a href="index.html#contact"
+        class="btn-primary btn-pulse hero-cta px-8 py-4 rounded-full font-bold text-base inline-flex items-center gap-3">
+        <i class="fas fa-paper-plane"></i>Rejoindre le groupe
+      </a>
+    </div>
+
+    <div class="hero-scroll text-white/40 flex flex-col items-center gap-1.5" aria-hidden="true">
+      <span class="text-xs font-semibold tracking-widest uppercase">Découvrir</span>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-3 gap-10 items-start">
+        <!-- Main content -->
+        <div class="lg:col-span-2 space-y-5 reveal">
+          <p class="text-gray-600 text-lg leading-relaxed">
+            Chez BussySport, la course à pied est avant tout une <strong>aventure collective</strong>. Chaque semaine,
+            nous nous retrouvons pour des sorties conviviales, ouvertes à tous les niveaux. Que vous couriez votre
+            premier kilomètre ou prépariez un semi-marathon, vous trouverez votre place dans le groupe.
+          </p>
+          <p class="text-gray-600 text-lg leading-relaxed">
+            Nos parcours alternent <strong>routes, sentiers et campagne vaudoise</strong>. L'objectif n'est pas la
+            performance — c'est de bouger, de partager, et de progresser ensemble.
+          </p>
+          <p class="text-gray-600 text-lg leading-relaxed">
+            Une bonne paire de chaussures, l'envie de bouger, le sourire — c'est tout ce qu'il faut pour démarrer.
+          </p>
+
+          <!-- Steps -->
+          <div class="mt-10">
+            <h2 class="font-display font-black text-2xl sm:text-3xl text-gray-900 mb-6">
+              Déroulement d'une sortie
+            </h2>
+            <div class="space-y-5">
+              <div class="feature-card step-line flex gap-5 p-5 rounded-2xl bg-gray-50 border border-gray-100">
+                <div
+                  class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 font-display font-black text-lg text-white"
+                  style="background: #1565C0">1</div>
+                <div>
+                  <h3 class="font-display font-bold text-base text-gray-900 mb-1">Échauffement</h3>
+                  <p class="text-gray-500 text-sm leading-relaxed">Mobilité articulaire et activation cardio progressive
+                    (5 à 10 min) pour préparer le corps.</p>
+                </div>
+              </div>
+              <div class="feature-card step-line flex gap-5 p-5 rounded-2xl bg-gray-50 border border-gray-100">
+                <div
+                  class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 font-display font-black text-lg text-white"
+                  style="background: #1565C0">2</div>
+                <div>
+                  <h3 class="font-display font-bold text-base text-gray-900 mb-1">Sortie principale</h3>
+                  <p class="text-gray-500 text-sm leading-relaxed">Course en groupe(s) selon les rythmes — personne ne
+                    reste seul derrière.</p>
+                </div>
+              </div>
+              <div class="feature-card step-line flex gap-5 p-5 rounded-2xl bg-gray-50 border border-gray-100">
+                <div
+                  class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 font-display font-black text-lg text-white"
+                  style="background: #1565C0">3</div>
+                <div>
+                  <h3 class="font-display font-bold text-base text-gray-900 mb-1">Étirements</h3>
+                  <p class="text-gray-500 text-sm leading-relaxed">Retour au calme avec étirements ciblés pour la
+                    récupération.</p>
+                </div>
+              </div>
+              <div class="feature-card flex gap-5 p-5 rounded-2xl bg-gray-50 border border-gray-100">
+                <div
+                  class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 font-display font-black text-lg text-white"
+                  style="background: #29B6F6">4</div>
+                <div>
+                  <h3 class="font-display font-bold text-base text-gray-900 mb-1">Moment partage</h3>
+                  <p class="text-gray-500 text-sm leading-relaxed">Échange convivial de fin de séance — le moment qui
+                    transforme le sport en communauté.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="space-y-5 reveal">
+          <!-- Info card -->
+          <div class="rounded-2xl p-7 text-white" style="background: linear-gradient(145deg, #0d2137 0%, #1565c0 100%);">
+            <h3 class="font-display font-bold text-lg mb-5 text-white/90">Infos Pratiques</h3>
+            <div class="space-y-4">
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style="background: rgba(255, 255, 255, 0.1);">
+                  <i class="fas fa-calendar-week text-sm" style="color: #29b6f6" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold uppercase tracking-widest text-white/45 mb-0.5">Fréquence</div>
+                  <div class="text-white text-sm font-medium">Hebdomadaire</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style="background: rgba(255, 255, 255, 0.1);">
+                  <i class="fas fa-clock text-sm" style="color: #29b6f6" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold uppercase tracking-widest text-white/45 mb-0.5">Durée</div>
+                  <div class="text-white text-sm font-medium">45 à 90 minutes</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style="background: rgba(255, 255, 255, 0.1);">
+                  <i class="fas fa-location-dot text-sm" style="color: #29b6f6" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold uppercase tracking-widest text-white/45 mb-0.5">Lieu</div>
+                  <div class="text-white text-sm font-medium">Bussigny et environs</div>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style="background: rgba(255, 255, 255, 0.1);">
+                  <i class="fas fa-coins text-sm" style="color: #29b6f6" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold uppercase tracking-widest text-white/45 mb-0.5">Tarif</div>
+                  <div class="text-white text-sm font-medium">Gratuit pour les membres</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pour qui? -->
+          <div class="info-box">
+            <h3 class="font-display font-bold text-base text-gray-900 mb-3">Pour qui ?</h3>
+            <ul class="space-y-2">
+              <li class="flex items-start gap-2.5 text-sm text-gray-700 leading-relaxed">
+                <i class="fas fa-check text-xs mt-1.5" style="color: #1565c0" aria-hidden="true"></i>
+                <span>Débutants qui veulent commencer à courir</span>
+              </li>
+              <li class="flex items-start gap-2.5 text-sm text-gray-700 leading-relaxed">
+                <i class="fas fa-check text-xs mt-1.5" style="color: #1565c0" aria-hidden="true"></i>
+                <span>Coureurs réguliers cherchant une équipe</span>
+              </li>
+              <li class="flex items-start gap-2.5 text-sm text-gray-700 leading-relaxed">
+                <i class="fas fa-check text-xs mt-1.5" style="color: #1565c0" aria-hidden="true"></i>
+                <span>Habitants de Bussigny et environs</span>
+              </li>
+              <li class="flex items-start gap-2.5 text-sm text-gray-700 leading-relaxed">
+                <i class="fas fa-check text-xs mt-1.5" style="color: #1565c0" aria-hidden="true"></i>
+                <span>Toute personne motivée — sans pré-requis</span>
+              </li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14 reveal">
+        <div class="flex items-center justify-center gap-4 mb-5">
+          <div class="swiss-line"></div>
+          <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Pourquoi se lancer</span>
+          <div class="swiss-line"></div>
+        </div>
+        <h2 class="sec-title font-display font-black text-3xl sm:text-4xl text-gray-900">
+          Pourquoi courir avec nous
+        </h2>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="feature-card p-6 rounded-2xl bg-gray-50 border border-gray-100 reveal reveal-d1">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+            style="background: rgba(21, 101, 192, 0.1);">
+            <i class="fas fa-heart-pulse text-xl" style="color: #1565c0" aria-hidden="true"></i>
+          </div>
+          <h3 class="font-display font-bold text-base text-gray-900 mb-2">Santé cardiovasculaire</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">Cœur plus fort, meilleure endurance, meilleur sommeil.</p>
+        </div>
+        <div class="feature-card p-6 rounded-2xl bg-gray-50 border border-gray-100 reveal reveal-d2">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+            style="background: rgba(21, 101, 192, 0.1);">
+            <i class="fas fa-arrow-trend-up text-xl" style="color: #1565c0" aria-hidden="true"></i>
+          </div>
+          <h3 class="font-display font-bold text-base text-gray-900 mb-2">Progression visible</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">Des plans adaptés et un groupe pour rester motivé sur la
+            durée.</p>
+        </div>
+        <div class="feature-card p-6 rounded-2xl bg-gray-50 border border-gray-100 reveal reveal-d3">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+            style="background: rgba(21, 101, 192, 0.1);">
+            <i class="fas fa-tree text-xl" style="color: #1565c0" aria-hidden="true"></i>
+          </div>
+          <h3 class="font-display font-bold text-base text-gray-900 mb-2">Plein air</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">Découvrez les parcours et la nature autour de Bussigny.</p>
+        </div>
+        <div class="feature-card p-6 rounded-2xl bg-gray-50 border border-gray-100 reveal reveal-d4">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+            style="background: rgba(21, 101, 192, 0.1);">
+            <i class="fas fa-people-group text-xl" style="color: #1565c0" aria-hidden="true"></i>
+          </div>
+          <h3 class="font-display font-bold text-base text-gray-900 mb-2">Lien social</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">Des rencontres qui dépassent le sport — courir, c'est aussi
+            se connaître.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OTHER ACTIVITIES -->
+  <section class="py-20" style="background: #f7f9fc">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 reveal">
+        <h2 class="sec-title font-display font-black text-3xl sm:text-4xl text-gray-900 mb-3">
+          Autres Activités
+        </h2>
+        <p class="text-gray-400 text-base">Découvrez tout ce que BussySport propose.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <a href="cross-training.html" class="activity-card reveal reveal-d1 block">
+          <div class="relative h-56">
+            <img class="card-img absolute inset-0"
+              src="https://images.pexels.com/photos/6150627/pexels-photo-6150627.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=400&w=600"
+              alt="Cross-Training BussySport" loading="lazy" />
+            <div class="card-overlay absolute inset-0"></div>
+            <div class="absolute inset-0 flex flex-col justify-end p-6">
+              <div class="flex items-center gap-3 mb-1">
+                <i class="fas fa-dumbbell text-lg" style="color: #29b6f6" aria-hidden="true"></i>
+                <h3 class="font-display font-bold text-xl text-white">Cross-Training</h3>
+              </div>
+              <span class="arrow-link mt-1">Découvrir <i class="fas fa-arrow-right arrow"></i></span>
+            </div>
+          </div>
+        </a>
+        <a href="street-workout.html" class="activity-card reveal reveal-d2 block">
+          <div class="relative h-56">
+            <img class="card-img absolute inset-0"
+              src="https://images.pexels.com/photos/10021277/pexels-photo-10021277.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=400&w=600"
+              alt="Street Workout BussySport" loading="lazy" />
+            <div class="card-overlay absolute inset-0"></div>
+            <div class="absolute inset-0 flex flex-col justify-end p-6">
+              <div class="flex items-center gap-3 mb-1">
+                <i class="fas fa-child-reaching text-lg" style="color: #29b6f6" aria-hidden="true"></i>
+                <h3 class="font-display font-bold text-xl text-white">Street Workout</h3>
+              </div>
+              <span class="arrow-link mt-1">Découvrir <i class="fas fa-arrow-right arrow"></i></span>
+            </div>
+          </div>
+        </a>
+        <a href="tournois.html" class="activity-card reveal reveal-d3 block">
+          <div class="relative h-56">
+            <img class="card-img absolute inset-0"
+              src="https://images.unsplash.com/photo-1770155590999-be95c70ca378?crop=entropy&cs=srgb&fm=jpg&q=85&w=600&h=400&fit=crop"
+              alt="Tournois BussySport" loading="lazy" />
+            <div class="card-overlay absolute inset-0"></div>
+            <div class="absolute inset-0 flex flex-col justify-end p-6">
+              <div class="flex items-center gap-3 mb-1">
+                <i class="fas fa-trophy text-lg" style="color: #29b6f6" aria-hidden="true"></i>
+                <h3 class="font-display font-bold text-xl text-white">Tournois de Jeux</h3>
+              </div>
+              <span class="arrow-link mt-1">Découvrir <i class="fas fa-arrow-right arrow"></i></span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-navy text-center px-4">
+    <div class="max-w-3xl mx-auto reveal">
+      <img src="images/logo.jpeg" alt="Logo BussySport"
+        class="h-20 w-20 rounded-full object-cover mx-auto mb-6 shadow-lg" width="80" height="80" />
+      <h2 class="font-display font-black text-3xl sm:text-4xl text-white mb-5 leading-tight">
+        Envie de nous rejoindre ?
+      </h2>
+      <p class="text-white/65 text-base sm:text-lg mb-8 leading-relaxed">
+        Contactez-nous pour vous inscrire ou poser vos questions — nous vous répondrons rapidement.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="index.html#contact"
+          class="btn-primary btn-pulse px-8 py-4 rounded-full font-bold text-base inline-flex items-center justify-center gap-3">
+          <i class="fas fa-paper-plane"></i>Rejoindre le groupe
+        </a>
+        <a href="mailto:info@bussysport.ch"
+          class="btn-outline px-8 py-4 rounded-full font-bold text-base inline-flex items-center justify-center gap-3">
+          <i class="fas fa-at"></i>info@bussysport.ch
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background: #0d2137" class="pt-14 pb-8 border-t border-white/8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-10 pb-10 border-b border-white/8">
+        <div>
+          <a href="index.html" class="flex items-center gap-3 mb-5">
+            <img src="images/logo.jpeg" alt="BussySport" class="h-12 w-12 rounded-full object-cover" loading="lazy" />
+            <div>
+              <div class="font-display font-black text-lg text-white">BussySport</div>
+              <div class="text-xs text-white/40 tracking-wide">Bussigny · 1030 VD</div>
+            </div>
+          </a>
+          <div class="flex gap-3">
+            <a href="https://www.instagram.com/bussysport" target="_blank" rel="noopener" aria-label="Instagram"
+              class="social-icon w-10 h-10 rounded-xl flex items-center justify-center text-white/50"
+              style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);">
+              <i class="fab fa-instagram text-lg"></i>
+            </a>
+            <a href="https://www.facebook.com/bussysport" target="_blank" rel="noopener" aria-label="Facebook"
+              class="social-icon w-10 h-10 rounded-xl flex items-center justify-center text-white/50"
+              style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);">
+              <i class="fab fa-facebook-f text-lg"></i>
+            </a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-bold text-white text-xs uppercase tracking-widest mb-5">Navigation</h3>
+          <ul class="space-y-3">
+            <li><a href="index.html"
+                class="text-white/45 hover:text-white text-sm font-medium transition-colors">Accueil</a></li>
+            <li><a href="index.html#apropos"
+                class="text-white/45 hover:text-white text-sm font-medium transition-colors">Notre Association</a></li>
+            <li><a href="index.html#activites"
+                class="text-white/45 hover:text-white text-sm font-medium transition-colors">Activités</a></li>
+            <li><a href="index.html#contact"
+                class="text-white/45 hover:text-white text-sm font-medium transition-colors">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-bold text-white text-xs uppercase tracking-widest mb-5">Activités</h3>
+          <ul class="space-y-3">
+            <li>
+              <a href="courses-a-pied.html"
+                class="text-white/75 hover:text-white text-sm font-semibold transition-colors flex items-center gap-2">
+                <i class="fas fa-person-running text-xs" style="color: #29b6f6"></i>Courses à pied
+              </a>
+            </li>
+            <li>
+              <a href="cross-training.html"
+                class="text-white/45 hover:text-white text-sm font-medium transition-colors flex items-center gap-2">
+                <i class="fas fa-dumbbell text-xs" style="color: #29b6f6"></i>Cross-Training
+              </a>
+            </li>
+            <li>
+              <a href="street-workout.html"
+                class="text-white/45 hover:text-white text-sm font-medium transition-colors flex items-center gap-2">
+                <i class="fas fa-child-reaching text-xs" style="color: #29b6f6"></i>Street Workout
+              </a>
+            </li>
+            <li>
+              <a href="tournois.html"
+                class="text-white/45 hover:text-white text-sm font-medium transition-colors flex items-center gap-2">
+                <i class="fas fa-trophy text-xs" style="color: #29b6f6"></i>Tournois
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row justify-between items-center pt-7 gap-4">
+        <p class="text-white/30 text-xs">
+          &copy; 2025 BussySport — Association à but non lucratif — Bussigny, Vaud, Suisse
+        </p>
+        <div class="flex items-center gap-5">
+          <a href="mentions-legales.html"
+            class="text-white/30 hover:text-white/70 text-xs font-medium transition-colors">Mentions légales</a>
+          <span class="text-white/25 text-xs">Fièrement suisse</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const hamburger = document.getElementById("hamburger"),
+        mobileMenu = document.getElementById("mobile-menu"),
+        icon = document.getElementById("hamburger-icon");
+      hamburger.addEventListener("click", function () {
+        const o = !mobileMenu.classList.contains("hidden");
+        mobileMenu.classList.toggle("hidden");
+        icon.className = o ? "fas fa-bars text-xl" : "fas fa-times text-xl";
+      });
+      window.closeMobileMenu = function () {
+        mobileMenu.classList.add("hidden");
+        icon.className = "fas fa-bars text-xl";
+      };
+      const obs = new IntersectionObserver(
+        function (e) {
+          e.forEach(function (t) {
+            if (t.isIntersecting) {
+              t.target.classList.add("is-visible");
+              obs.unobserve(t.target);
+            }
+          });
+        },
+        { threshold: 0.08, rootMargin: "0px 0px -40px 0px" },
+      );
+      document.querySelectorAll(".reveal").forEach(function (el) {
+        obs.observe(el);
+      });
+    })();
+  </script>
+</body>
+
+</html>
