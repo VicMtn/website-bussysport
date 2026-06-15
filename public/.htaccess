@@ -1,0 +1,107 @@
+# BussySport — Configuration pour hébergement mutualisé (Apache / LiteSpeed).
+#
+# nginx n'utilise pas les fichiers .htaccess. Si votre hébergeur tourne sous
+# nginx, copiez le bloc équivalent en bas de ce fichier dans la conf serveur.
+
+# Encodage et type par défaut pour les fichiers servis depuis ce dossier.
+AddDefaultCharset UTF-8
+DirectoryIndex index.html index.php
+
+# 1) Compression des assets texte
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml application/xml
+</IfModule>
+
+# 2) Cache long pour les assets hashés par Vite
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css                "access plus 1 year"
+  ExpiresByType application/javascript  "access plus 1 year"
+  ExpiresByType image/jpeg              "access plus 1 month"
+  ExpiresByType image/png               "access plus 1 month"
+  ExpiresByType image/svg+xml           "access plus 1 month"
+  ExpiresByType image/webp              "access plus 1 month"
+  ExpiresByType font/woff2              "access plus 1 year"
+  # Le shell SPA doit pouvoir évoluer rapidement.
+  ExpiresByType text/html               "access plus 5 minutes"
+</IfModule>
+
+# 3) Fallback SPA pour Vue Router en mode history
+#    Si mod_rewrite est disponible : réécriture propre vers index.html.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Forcer HTTPS si déjà accessible (ignoré si HTTPS pas configuré côté hébergeur).
+  # Décommentez si certificat installé :
+  # RewriteCond %{HTTPS} !=on
+  # RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Laisser passer les vrais fichiers et dossiers (assets, contact.php, sitemap, etc.).
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Tout le reste → shell SPA.
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# 3 bis) Filet de sécurité si mod_rewrite est désactivé :
+#        Apache servira index.html en cas de 404 et le SPA prendra le relais
+#        en lisant window.location au montage de Vue Router.
+ErrorDocument 404 /index.html
+
+# 4) En-têtes de sécurité
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# 5) Protection des fichiers sensibles
+<FilesMatch "^\.(?!well-known)|^(composer\.(json|lock)|package(-lock)?\.json|\.env.*|README\.md)$">
+  Require all denied
+</FilesMatch>
+
+# 6) Désactiver le listing de dossiers
+<IfModule mod_autoindex.c>
+  Options -Indexes
+</IfModule>
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Équivalent nginx (à copier dans le server block si l'hébergeur tourne sous nginx) :
+#
+# server {
+#   listen 443 ssl;
+#   server_name bussysport.ch www.bussysport.ch;
+#   root /var/www/bussysport;
+#   index index.html index.php;
+#
+#   # SPA fallback
+#   location / {
+#     try_files $uri $uri/ /index.html;
+#   }
+#
+#   # PHP (contact.php)
+#   location ~ \.php$ {
+#     include snippets/fastcgi-php.conf;
+#     fastcgi_pass unix:/run/php/php-fpm.sock;
+#   }
+#
+#   # Cache long pour les assets hashés
+#   location /assets/ {
+#     expires 1y;
+#     add_header Cache-Control "public, immutable";
+#   }
+#
+#   # En-têtes de sécurité
+#   add_header X-Content-Type-Options "nosniff" always;
+#   add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+#   add_header X-Frame-Options "SAMEORIGIN" always;
+#
+#   # Bloquer les fichiers sensibles
+#   location ~ /\.env { deny all; }
+#   location ~ /\.ht  { deny all; }
+# }
