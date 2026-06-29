@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Autorisation parentale – BussySport</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Georgia, "Times New Roman", serif;
+        color: #1a202c;
+        line-height: 1.6;
+        padding: 40px 24px;
+        max-width: 800px;
+        margin: 0 auto;
+        background: #fff;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 36px;
+        padding-bottom: 24px;
+        border-bottom: 2px solid #1565c0;
+      }
+      .header h1 {
+        font-size: 1.5rem;
+        color: #0d2137;
+        margin-bottom: 4px;
+      }
+      .header p {
+        font-size: 0.9rem;
+        color: #666;
+      }
+      h2 {
+        font-size: 1.1rem;
+        color: #1565c0;
+        margin: 28px 0 12px;
+      }
+      p,
+      li {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+      }
+      .field {
+        border-bottom: 1px dotted #999;
+        min-height: 28px;
+        margin: 8px 0 16px;
+        padding-bottom: 2px;
+      }
+      .field-label {
+        font-size: 0.8rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .signatures {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-top: 48px;
+      }
+      .sign-box {
+        border-top: 1px solid #333;
+        padding-top: 8px;
+        min-height: 80px;
+      }
+      .sign-box span {
+        font-size: 0.8rem;
+        color: #666;
+      }
+      .note {
+        background: #f7f9fc;
+        border-left: 4px solid #1565c0;
+        padding: 16px 20px;
+        margin: 24px 0;
+        font-size: 0.9rem;
+      }
+      .print-btn {
+        display: inline-block;
+        margin-bottom: 32px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #0d2137, #1565c0);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+      }
+      @media print {
+        .print-btn {
+          display: none;
+        }
+        body {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="print-btn" type="button" onclick="window.print()">
+      Imprimer / Enregistrer en PDF
+    </button>
+
+    <div class="header">
+      <h1>BussySport</h1>
+      <p>Association sportive · Bussigny-près-Lausanne · 1030 Vaud · Suisse</p>
+      <p style="margin-top: 12px; font-weight: bold; font-size: 1rem">
+        Autorisation parentale pour l'adhésion d'un·e mineur·e
+      </p>
+    </div>
+
+    <div class="note">
+      Ce document est obligatoire pour toute demande d'adhésion d'un·e jeune
+      <strong>âgé·e de 16 à 18 ans non révolus</strong>. Il doit être signé par
+      un parent ou le tuteur légal, puis joint au formulaire en ligne.
+    </div>
+
+    <h2>1. Identité du/de la mineur·e</h2>
+    <div class="field-label">Nom et prénom</div>
+    <div class="field"></div>
+    <div class="field-label">Date de naissance</div>
+    <div class="field"></div>
+    <div class="field-label">Adresse</div>
+    <div class="field"></div>
+
+    <h2>2. Identité du parent / tuteur légal</h2>
+    <div class="field-label">Nom et prénom</div>
+    <div class="field"></div>
+    <div class="field-label">Lien de parenté</div>
+    <div class="field"></div>
+    <div class="field-label">Téléphone</div>
+    <div class="field"></div>
+    <div class="field-label">Email</div>
+    <div class="field"></div>
+
+    <h2>3. Autorisation</h2>
+    <p>
+      Je soussigné·e, parent / tuteur légal du/de la mineur·e désigné·e
+      ci-dessus, autorise expressément son adhésion à l'association
+      <strong>BussySport</strong>
+      et sa participation aux activités sportives proposées par celle-ci.
+    </p>
+    <p>Je déclare :</p>
+    <ul style="margin-left: 24px; margin-bottom: 16px">
+      <li>
+        avoir pris connaissance des statuts et du règlement intérieur de
+        l'association ;
+      </li>
+      <li>
+        que le/la mineur·e est en bonne santé et apte à pratiquer une activité
+        sportive ;
+      </li>
+      <li>
+        m'engager à informer l'association de tout changement pouvant affecter
+        la participation du/de la mineur·e ;
+      </li>
+      <li>
+        accepter que les données personnelles soient traitées conformément à la
+        politique de confidentialité de BussySport.
+      </li>
+    </ul>
+
+    <h2>4. Assurance accident</h2>
+    <p>
+      Je confirme que le/la mineur·e est couvert·e par une assurance accident
+      valable en Suisse pour la pratique sportive, ou m'engage à souscrire une
+      couverture adaptée.
+    </p>
+    <div class="field-label">Nom de l'assureur (le cas échéant)</div>
+    <div class="field"></div>
+
+    <h2>5. Contact d'urgence</h2>
+    <div class="field-label">Nom et prénom</div>
+    <div class="field"></div>
+    <div class="field-label">Téléphone</div>
+    <div class="field"></div>
+
+    <p style="margin-top: 32px">
+      Fait à _____________________________, le ____ / ____ / ________
+    </p>
+
+    <div class="signatures">
+      <div>
+        <div class="sign-box">
+          <span>Signature du parent / tuteur légal</span>
+        </div>
+      </div>
+      <div>
+        <div class="sign-box">
+          <span>Signature du/de la mineur·e (16–17 ans)</span>
+        </div>
+      </div>
+    </div>
+
+    <p
+      style="
+        margin-top: 40px;
+        font-size: 0.8rem;
+        color: #888;
+        text-align: center;
+      "
+    >
+      BussySport · info@bussysport.ch · bussysport.ch
+    </p>
+  </body>
+</html>

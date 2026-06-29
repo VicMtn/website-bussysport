@@ -38,8 +38,15 @@ import { RouterLink } from "vue-router";
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <RouterLink
-          :to="{ hash: '#contact' }"
+          to="/adhesion"
           class="btn-primary btn-pulse px-9 py-4 rounded-full font-bold text-base inline-flex items-center gap-3"
+          data-testid="cta-adhesion-btn"
+        >
+          <i class="fas fa-user-plus"></i>Demander l'adhésion
+        </RouterLink>
+        <RouterLink
+          :to="{ hash: '#contact' }"
+          class="btn-outline px-9 py-4 rounded-full font-bold text-base inline-flex items-center gap-3"
           data-testid="cta-contact-btn"
         >
           <i class="fas fa-envelope"></i>Nous Contacter

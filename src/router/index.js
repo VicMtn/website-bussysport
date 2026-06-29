@@ -31,6 +31,11 @@ const routes = [
     name: "mentions-legales",
     component: () => import("@/views/MentionsLegalesView.vue"),
   },
+  {
+    path: "/adhesion",
+    name: "adhesion",
+    component: () => import("@/views/AdhesionView.vue"),
+  },
   // Legacy .html paths from the previous static site → redirect.
   { path: "/index.html", redirect: "/" },
   { path: "/courses-a-pied.html", redirect: "/courses-a-pied" },
@@ -38,6 +43,7 @@ const routes = [
   { path: "/street-workout.html", redirect: "/street-workout" },
   { path: "/tournois.html", redirect: "/tournois" },
   { path: "/mentions-legales.html", redirect: "/mentions-legales" },
+  { path: "/adhesion.html", redirect: "/adhesion" },
   { path: "/:pathMatch(.*)*", redirect: "/" },
 ];
 
