@@ -17,6 +17,15 @@ export const EMERGENCY_RELATIONS = [
   { value: "autre", label: "Autre" },
 ];
 
+export const REFERRAL_SOURCES = [
+  { value: "bouche-a-oreille", label: "Bouche-à-oreille (ami, famille)" },
+  { value: "reseaux-sociaux", label: "Réseaux sociaux (Instagram, Facebook…)" },
+  { value: "internet", label: "Recherche internet / site web" },
+  { value: "evenement", label: "Événement / manifestation" },
+  { value: "flyer-affiche", label: "Flyer / affiche" },
+  { value: "autre", label: "Autre" },
+];
+
 const GENDER_LABELS = {
   femme: "Femme",
   homme: "Homme",
@@ -103,11 +112,16 @@ export function useAdhesionForm({ throttle } = {}) {
     avs: "",
     hasInsurance: "",
     insuranceName: "",
+    medicalContraindication: "",
+    medicalDetails: "",
     activities: [],
     emergencyRelation: "",
     emergencyName: "",
     emergencyPhone: "",
+    referralSource: "",
+    referralSourceOther: "",
     remarks: "",
+    imageRights: false,
     acceptTerms: false,
     website: "", // honeypot
   });
@@ -146,11 +160,16 @@ export function useAdhesionForm({ throttle } = {}) {
     form.avs = "";
     form.hasInsurance = "";
     form.insuranceName = "";
+    form.medicalContraindication = "";
+    form.medicalDetails = "";
     form.activities = [];
     form.emergencyRelation = "";
     form.emergencyName = "";
     form.emergencyPhone = "";
+    form.referralSource = "";
+    form.referralSourceOther = "";
     form.remarks = "";
+    form.imageRights = false;
     form.acceptTerms = false;
     form.website = "";
     parentAuthFile.value = null;
@@ -274,6 +293,23 @@ export function useAdhesionForm({ throttle } = {}) {
       return false;
     }
 
+    if (!["oui", "non"].includes(form.medicalContraindication)) {
+      showErrorPlain(
+        "Veuillez indiquer si vous avez une contre-indication médicale.",
+      );
+      return false;
+    }
+
+    if (form.medicalContraindication === "oui" && !form.medicalDetails.trim()) {
+      showErrorPlain("Veuillez préciser votre contre-indication médicale.");
+      return false;
+    }
+
+    if (!REFERRAL_SOURCES.some((s) => s.value === form.referralSource)) {
+      showErrorPlain("Veuillez indiquer comment vous avez connu BussySport.");
+      return false;
+    }
+
     if (!form.acceptTerms) {
       showErrorPlain("Veuillez accepter les conditions d'adhésion.");
       return false;
@@ -302,6 +338,16 @@ export function useAdhesionForm({ throttle } = {}) {
     const relation =
       EMERGENCY_RELATIONS.find((r) => r.value === form.emergencyRelation)
         ?.label ?? form.emergencyRelation;
+    let referralLabel =
+      REFERRAL_SOURCES.find((s) => s.value === form.referralSource)?.label ??
+      form.referralSource;
+    if (form.referralSource === "autre" && form.referralSourceOther.trim()) {
+      referralLabel += ` — ${form.referralSourceOther.trim()}`;
+    }
+    const medicalLabel =
+      form.medicalContraindication === "oui"
+        ? `Contre-indication signalée : ${form.medicalDetails.trim()}`
+        : "Aucune contre-indication déclarée (apte à la pratique)";
 
     return [
       "NOUVELLE DEMANDE D'ADHÉSION",
@@ -323,6 +369,9 @@ export function useAdhesionForm({ throttle } = {}) {
       "— Assurance accident —",
       insuranceLabel,
       "",
+      "— Aptitude médicale —",
+      medicalLabel,
+      "",
       "— Activités souhaitées —",
       activityLabels.join(", "),
       "",
@@ -331,9 +380,15 @@ export function useAdhesionForm({ throttle } = {}) {
       `Téléphone : ${form.emergencyPhone.trim()}`,
       "",
       "— Autorisation parentale —",
-      needsParentAuth.value
-        ? "Requise — jointe à cet email"
-        : "Non requise",
+      needsParentAuth.value ? "Requise — jointe à cet email" : "Non requise",
+      "",
+      "— Comment a connu BussySport —",
+      referralLabel,
+      "",
+      "— Droit à l'image —",
+      form.imageRights
+        ? "Accordé (publication photos/vidéos en ligne autorisée)"
+        : "Refusé (pas de publication en ligne)",
       "",
       "— Remarques —",
       form.remarks.trim() || "—",
@@ -427,6 +482,7 @@ export function useAdhesionForm({ throttle } = {}) {
     activities: ACTIVITY_KEYS,
     activityLabels: activities,
     emergencyRelations: EMERGENCY_RELATIONS,
+    referralSources: REFERRAL_SOURCES,
     age,
     maxBirthdate,
     minMembershipAge: MIN_MEMBERSHIP_AGE,

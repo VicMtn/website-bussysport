@@ -19,6 +19,7 @@ const {
   form,
   activityLabels,
   emergencyRelations,
+  referralSources,
   age,
   maxBirthdate,
   minMembershipAge,
@@ -324,6 +325,68 @@ const {
           </div>
         </fieldset>
 
+        <!-- Aptitude médicale -->
+        <fieldset class="space-y-5">
+          <legend
+            class="font-display font-bold text-lg text-gray-900 mb-1 flex items-center gap-2"
+          >
+            <i
+              class="fas fa-heart-pulse text-primary text-sm"
+              aria-hidden="true"
+            ></i>
+            Aptitude médicale
+          </legend>
+
+          <div>
+            <span class="field-label block mb-3">
+              Avez-vous une contre-indication médicale à la pratique d'une
+              activité physique moyennement à très soutenue ?
+              <span class="text-red-500">*</span>
+            </span>
+            <div class="flex flex-wrap gap-4">
+              <label
+                class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer"
+              >
+                <input
+                  v-model="form.medicalContraindication"
+                  type="radio"
+                  value="non"
+                  class="accent-primary"
+                />
+                Non
+              </label>
+              <label
+                class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer"
+              >
+                <input
+                  v-model="form.medicalContraindication"
+                  type="radio"
+                  value="oui"
+                  class="accent-primary"
+                />
+                Oui
+              </label>
+            </div>
+            <p class="text-xs text-gray-400 mt-2">
+              En répondant « Non », je certifie ne pas avoir de contre-indication
+              médicale à la pratique sportive.
+            </p>
+          </div>
+
+          <div v-if="form.medicalContraindication === 'oui'">
+            <label for="medicalDetails" class="field-label">
+              Merci de préciser <span class="text-red-500">*</span>
+            </label>
+            <textarea
+              id="medicalDetails"
+              v-model="form.medicalDetails"
+              rows="2"
+              class="form-input w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-gray-800 text-sm resize-none"
+              placeholder="Nature de la contre-indication, restrictions éventuelles…"
+            ></textarea>
+          </div>
+        </fieldset>
+
         <!-- Activités -->
         <fieldset class="space-y-5">
           <legend
@@ -487,6 +550,36 @@ const {
           </div>
         </div>
 
+        <!-- Comment a connu BussySport -->
+        <div>
+          <label for="referralSource" class="field-label">
+            Comment avez-vous connu BussySport ?
+            <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="referralSource"
+            v-model="form.referralSource"
+            required
+            class="form-input w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-gray-800 text-sm"
+          >
+            <option value="">Choisissez…</option>
+            <option
+              v-for="source in referralSources"
+              :key="source.value"
+              :value="source.value"
+            >
+              {{ source.label }}
+            </option>
+          </select>
+          <input
+            v-if="form.referralSource === 'autre'"
+            v-model="form.referralSourceOther"
+            type="text"
+            class="form-input w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white text-gray-800 text-sm mt-3"
+            placeholder="Précisez (optionnel)"
+          />
+        </div>
+
         <!-- Remarques -->
         <div>
           <label for="remarks" class="field-label">Remarques (optionnel)</label>
@@ -498,6 +591,21 @@ const {
             placeholder="Informations complémentaires, contraintes médicales, etc."
           ></textarea>
         </div>
+
+        <!-- Droit à l'image -->
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input
+            v-model="form.imageRights"
+            type="checkbox"
+            class="mt-1 accent-primary"
+          />
+          <span class="text-sm text-gray-600 leading-relaxed">
+            J'autorise BussySport à publier en ligne (site internet, réseaux
+            sociaux) des photos et vidéos prises dans le cadre des activités de
+            l'association sur lesquelles je pourrais apparaître.
+            <span class="text-gray-400">(facultatif)</span>
+          </span>
+        </label>
 
         <!-- Acceptation -->
         <label class="flex items-start gap-3 cursor-pointer">
