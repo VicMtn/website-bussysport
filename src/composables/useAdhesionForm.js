@@ -1,8 +1,8 @@
 import { computed, reactive, ref } from "vue";
 import { activities } from "@/data/activities";
 import { useSubmissionThrottle } from "./useSubmissionThrottle";
-import { useTurnstile } from "./useTurnstile";
-import { TURNSTILE_REQUIRED_ERROR } from "@/utils/turnstileErrors";
+
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
 
 const MAIL_FALLBACK_HTML =
   'Si le problème persiste, écrivez-nous à <a href="mailto:info@bussysport.ch" class="underline font-bold">info@bussysport.ch</a>.';
@@ -17,7 +17,16 @@ export const EMERGENCY_RELATIONS = [
   { value: "autre", label: "Autre" },
 ];
 
+const GENDER_LABELS = {
+  femme: "Femme",
+  homme: "Homme",
+  autre: "Autre / Ne souhaite pas préciser",
+};
+
 const ACTIVITY_KEYS = activities.map((a) => a.slug);
+const ACTIVITY_LABELS = Object.fromEntries(
+  activities.map((a) => [a.slug, a.label]),
+);
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 Mo
 const ALLOWED_FILE_TYPES = [
   "application/pdf",
@@ -37,6 +46,12 @@ function escapeHtml(s) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+/** YYYY-MM-DD → DD.MM.YYYY (sans dépendance, pour l'email). */
+function formatBirthdateFr(birthdate) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birthdate);
+  return match ? `${match[3]}.${match[2]}.${match[1]}` : birthdate;
 }
 
 export const MIN_MEMBERSHIP_AGE = 16;
@@ -106,9 +121,6 @@ export function useAdhesionForm({ throttle } = {}) {
       key: "bussysport:adhesion:lastSubmit",
       cooldownMs: 10_000,
     });
-
-  const turnstile = useTurnstile();
-  const captchaRequired = computed(() => turnstile.enabled.value);
 
   const loading = ref(false);
   const successText = ref("");
@@ -274,12 +286,58 @@ export function useAdhesionForm({ throttle } = {}) {
       return false;
     }
 
-    if (captchaRequired.value && !turnstile.getToken()) {
-      showErrorPlain(turnstile.errorMessage.value || TURNSTILE_REQUIRED_ERROR);
-      return false;
-    }
-
     return true;
+  }
+
+  /** Récapitulatif lisible envoyé dans le corps de l'email Web3Forms. */
+  function buildSummary() {
+    const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
+    const activityLabels = form.activities.map(
+      (slug) => ACTIVITY_LABELS[slug] ?? slug,
+    );
+    const insuranceLabel =
+      form.hasInsurance === "oui"
+        ? `Oui — ${form.insuranceName.trim()}`
+        : "Non";
+    const relation =
+      EMERGENCY_RELATIONS.find((r) => r.value === form.emergencyRelation)
+        ?.label ?? form.emergencyRelation;
+
+    return [
+      "NOUVELLE DEMANDE D'ADHÉSION",
+      "",
+      "— Identité —",
+      `Prénom : ${form.firstName.trim()}`,
+      `Nom : ${form.lastName.trim()}`,
+      `Date de naissance : ${formatBirthdateFr(form.birthdate)} (${age.value} ans)`,
+      `Sexe : ${form.gender ? GENDER_LABELS[form.gender] : "—"}`,
+      `Nationalité : ${form.nationality.trim() || "—"}`,
+      "",
+      "— Coordonnées —",
+      `Adresse : ${form.address.trim()}`,
+      `NPA / Localité : ${form.zip.trim()} ${form.city.trim()}`,
+      `Téléphone : ${form.phone.trim()}`,
+      `Email : ${form.email.trim()}`,
+      `N° AVS : ${form.avs.trim() || "—"}`,
+      "",
+      "— Assurance accident —",
+      insuranceLabel,
+      "",
+      "— Activités souhaitées —",
+      activityLabels.join(", "),
+      "",
+      "— Contact d'urgence —",
+      `${relation} — ${form.emergencyName.trim()}`,
+      `Téléphone : ${form.emergencyPhone.trim()}`,
+      "",
+      "— Autorisation parentale —",
+      needsParentAuth.value
+        ? "Requise — jointe à cet email"
+        : "Non requise",
+      "",
+      "— Remarques —",
+      form.remarks.trim() || "—",
+    ].join("\n");
   }
 
   async function submit() {
@@ -296,72 +354,64 @@ export function useAdhesionForm({ throttle } = {}) {
       return;
     }
 
+    // Honeypot : un bot qui remplit ce champ caché reçoit un faux succès.
     if (form.website.trim()) {
       showSuccess();
       reset();
       return;
     }
 
+    const accessKey = (window.BUSSYSPORT_WEB3FORMS_ACCESS_KEY || "").trim();
+    if (!accessKey) {
+      showError(`Le formulaire n'est pas configuré. ${MAIL_FALLBACK_HTML}`);
+      return;
+    }
+
     loading.value = true;
 
     try {
-      const body = new FormData();
-      body.append("firstName", form.firstName.trim());
-      body.append("lastName", form.lastName.trim());
-      body.append("birthdate", form.birthdate);
-      body.append("gender", form.gender);
-      body.append("nationality", form.nationality.trim());
-      body.append("address", form.address.trim());
-      body.append("zip", form.zip.trim());
-      body.append("city", form.city.trim());
-      body.append("phone", form.phone.trim());
-      body.append("email", form.email.trim());
-      body.append("avs", form.avs.trim());
-      body.append("hasInsurance", form.hasInsurance);
-      body.append("insuranceName", form.insuranceName.trim());
-      body.append("activities", JSON.stringify(form.activities));
-      body.append("emergencyRelation", form.emergencyRelation);
-      body.append("emergencyName", form.emergencyName.trim());
-      body.append("emergencyPhone", form.emergencyPhone.trim());
-      body.append("remarks", form.remarks.trim());
-      body.append("acceptTerms", form.acceptTerms ? "1" : "0");
-      body.append("website", form.website);
+      const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
 
-      const captchaToken = turnstile.getToken();
-      if (captchaToken) {
-        body.append("cf-turnstile-response", captchaToken);
-      }
+      // multipart/form-data : requis pour joindre l'autorisation parentale.
+      const body = new FormData();
+      body.append("access_key", accessKey);
+      body.append(
+        "subject",
+        `[BussySport] Nouvelle demande d'adhésion — ${fullName}`,
+      );
+      body.append("from_name", "BussySport — Adhésion");
+      body.append("name", fullName);
+      body.append("email", form.email.trim());
+      body.append("replyto", form.email.trim());
+      body.append("message", buildSummary());
 
       if (parentAuthFile.value) {
         body.append(
-          "parentAuth",
+          "attachment",
           parentAuthFile.value,
           parentAuthFile.value.name,
         );
       }
 
-      const res = await fetch("/adhesion.php", {
+      const res = await fetch(WEB3FORMS_ENDPOINT, {
         method: "POST",
-        body,
         headers: { Accept: "application/json" },
+        body,
       });
 
-      const raw = await res.text();
       let data;
       try {
-        data = JSON.parse(raw);
+        data = await res.json();
       } catch {
-        showError(`Une erreur est survenue. ${MAIL_FALLBACK_HTML}`);
+        showError(`Réponse du service d'envoi invalide. ${MAIL_FALLBACK_HTML}`);
         return;
       }
 
       if (data?.success === true) {
-        showSuccess(data.message);
+        showSuccess();
         reset();
-        turnstile.reset();
       } else if (data?.message) {
         showErrorPlain(data.message);
-        turnstile.reset();
       } else {
         showError(SEND_ERROR);
       }
@@ -386,10 +436,6 @@ export function useAdhesionForm({ throttle } = {}) {
     successText,
     errorHtml,
     cooldownLeft: submissionThrottle.cooldownLeft,
-    captchaRequired,
-    turnstileContainerRef: turnstile.containerRef,
-    turnstileReady: turnstile.ready,
-    turnstileErrorMessage: turnstile.errorMessage,
     toggleActivity,
     onParentAuthChange,
     submit,

@@ -28,10 +28,6 @@ const {
   successText,
   errorHtml,
   cooldownLeft,
-  captchaRequired,
-  turnstileContainerRef,
-  turnstileReady,
-  turnstileErrorMessage,
   toggleActivity,
   onParentAuthChange,
   submit,
@@ -525,26 +521,6 @@ const {
           </span>
         </label>
 
-        <!-- Contrôle de sécurité -->
-        <div v-if="captchaRequired" class="space-y-3">
-          <div class="flex justify-center">
-            <div
-              ref="turnstileContainerRef"
-              data-testid="adhesion-turnstile"
-              aria-label="Contrôle de sécurité"
-            ></div>
-          </div>
-          <p
-            v-if="turnstileErrorMessage"
-            class="text-sm text-red-600 text-center font-medium"
-            role="alert"
-            data-testid="turnstile-error"
-          >
-            <i class="fas fa-exclamation-circle mr-1" aria-hidden="true"></i>
-            {{ turnstileErrorMessage }}
-          </p>
-        </div>
-
         <!-- Feedback -->
         <div
           v-if="successText"
@@ -568,9 +544,7 @@ const {
 
         <button
           type="submit"
-          :disabled="
-            loading || cooldownLeft > 0 || (captchaRequired && !turnstileReady)
-          "
+          :disabled="loading || cooldownLeft > 0"
           class="btn-primary w-full py-4 rounded-xl font-bold text-base flex items-center justify-center gap-3"
           data-testid="adhesion-submit-btn"
         >

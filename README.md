@@ -86,46 +86,29 @@ A honeypot (`website` field) blocks naive bots.
 
 ## Adhesion form
 
-The membership form at `/adhesion` posts to `public/adhesion.php` (multipart,
-with optional parent-authorization upload). Protections:
+The membership form at `/adhesion` (`useAdhesionForm.js`) is sent through
+**Web3Forms** — the same no-backend service as the contact form, so it works on
+static FTP hosting with **no PHP required**. It posts `multipart/form-data` to
+`https://api.web3forms.com/submit` so the optional parental-authorization file
+(16–17 yo) can be attached.
 
-- Honeypot field
-- Server-side rate limit (1 request / 10 s per IP)
-- Client-side cooldown between submissions (10 s)
-- **Cloudflare Turnstile** captcha (recommended in production)
+Setup: reuse the Web3Forms access key already set in `public/contact-config.js`
+(`window.BUSSYSPORT_WEB3FORMS_ACCESS_KEY`), and make sure the recipient address
+for that key is `info@bussysport.ch` in your Web3Forms dashboard.
 
-To enable Turnstile:
+Spam protection (Web3Forms free tier):
 
-1. Create a widget at [Cloudflare Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile) for `bussysport.ch`.
-2. Under **Hostname management**, add every domain where the form runs:
-   - `bussysport.ch` and `www.bussysport.ch` (production)
-   - `localhost` if you test locally with the production site key ([docs](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/))
-3. Set the **site key** in `public/contact-config.js`:
-   ```js
-   window.BUSSYSPORT_TURNSTILE_SITE_KEY = "your-site-key";
-   ```
-4. Set the matching **secret key** server-side. The secret must **never** be
-   committed (this repo is public). Copy the template and fill it in, then
-   upload the copy via FTP next to `adhesion.php`:
-   ```bash
-   cp public/adhesion-config.sample.php public/adhesion-config.php
-   ```
-   ```php
-   // public/adhesion-config.php  (git-ignored)
-   return ['turnstile_secret' => 'your-secret-key'];
-   ```
-   Alternatively, set the `BS_TURNSTILE_SECRET` environment variable on your host.
+- Honeypot (`website` field) — naive bots get a silent fake success.
+- Client-side cooldown between submissions (10 s).
+- Web3Forms built-in spam filtering.
 
-Both keys must be configured together. Without a secret (file absent or empty),
-server-side verification is disabled (fail-open): the form still works but is no
-longer captcha-protected on the server — only the honeypot + rate limits apply.
+File upload: the free tier accepts a single attachment up to 5 MB (PDF/JPG/PNG),
+which matches the parental-authorization limit enforced client-side.
 
-Turnstile uses [explicit rendering](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/)
-(SPA-compatible) with `language: fr`. Visitor-facing errors use plain language
-(« contrôle de sécurité »); technical codes are logged server-side only.
-
-**Troubleshooting (developers):** Error `110200` = hostname not in widget settings.
-Add `localhost` exactly (not `locahost`). For local dev, prefer [test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/).
+> **Stronger anti-bot (optional):** Cloudflare Turnstile server-side
+> verification is a Web3Forms **Pro** feature. If you upgrade, enable it in the
+> Web3Forms dashboard (paste the Turnstile secret there) and add the widget to
+> the form — nothing needs to run on your own server.
 
 ## SEO
 

@@ -13,10 +13,6 @@ dist-ssr/
 *.env
 *.env.*
 
-# Secrets côté serveur (PHP) — déposés via FTP, jamais committés.
-# Le modèle adhesion-config.sample.php reste versionné.
-public/adhesion-config.php
-
 # Editor files
 .emergent/
 .cursor/
