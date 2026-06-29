@@ -428,6 +428,11 @@ export function useAdhesionForm({ throttle } = {}) {
       const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
 
       // multipart/form-data : requis pour joindre l'autorisation parentale.
+      // Web3Forms affiche chaque champ posté comme une ligne du mail (la clé =
+      // libellé). Pour un mail 100 % français, on n'envoie QUE `message` (le mot
+      // « Message » est identique en FR) avec tout le récapitulatif ; le nom et
+      // l'email sont déjà dans ce récap. `subject`, `from_name`, `replyto` et
+      // `access_key` sont des champs spéciaux non affichés comme données.
       const body = new FormData();
       body.append("access_key", accessKey);
       body.append(
@@ -435,8 +440,6 @@ export function useAdhesionForm({ throttle } = {}) {
         `[BussySport] Nouvelle demande d'adhésion — ${fullName}`,
       );
       body.append("from_name", "BussySport — Adhésion");
-      body.append("name", fullName);
-      body.append("email", form.email.trim());
       body.append("replyto", form.email.trim());
       body.append("message", buildSummary());
 
