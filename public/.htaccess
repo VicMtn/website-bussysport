@@ -61,7 +61,7 @@ ErrorDocument 404 /index.html
 </IfModule>
 
 # 5) Protection des fichiers sensibles
-<FilesMatch "^\.(?!well-known)|^(composer\.(json|lock)|package(-lock)?\.json|\.env.*|README\.md)$">
+<FilesMatch "^\.(?!well-known)|^(composer\.(json|lock)|package(-lock)?\.json|\.env.*|README\.md|adhesion-config(\.sample)?\.php)$">
   Require all denied
 </FilesMatch>
 
