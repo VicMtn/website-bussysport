@@ -18,14 +18,14 @@ useHead({
         'Rejoignez les sorties running de BussySport à Bussigny. Courses à pied pour tous niveaux – débutants à confirmés. Convivial, hebdomadaire, en plein air.',
     },
     { property: 'og:type', content: 'article' },
-    { property: 'og:url', content: 'https://bussysport.ch/courses-a-pied' },
+    { property: 'og:url', content: 'https://bussysport.ch/courses-a-pied/' },
     { property: 'og:title', content: 'Courses à Pied – BussySport Bussigny' },
     {
       property: 'og:description',
       content: 'Sorties running hebdomadaires à Bussigny pour tous les niveaux.',
     },
   ],
-  link: [{ rel: 'canonical', href: 'https://bussysport.ch/courses-a-pied' }],
+  link: [{ rel: 'canonical', href: 'https://bussysport.ch/courses-a-pied/' }],
 })
 
 const paragraphs = [

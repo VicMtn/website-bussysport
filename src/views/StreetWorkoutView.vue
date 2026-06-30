@@ -18,10 +18,10 @@ useHead({
         'Street Workout et calisthenics avec BussySport à Bussigny. Musculation en plein air au poids du corps, pour tous niveaux. Tractions, dips et plus.',
     },
     { property: 'og:type', content: 'article' },
-    { property: 'og:url', content: 'https://bussysport.ch/street-workout' },
+    { property: 'og:url', content: 'https://bussysport.ch/street-workout/' },
     { property: 'og:title', content: 'Street Workout – BussySport Bussigny' },
   ],
-  link: [{ rel: 'canonical', href: 'https://bussysport.ch/street-workout' }],
+  link: [{ rel: 'canonical', href: 'https://bussysport.ch/street-workout/' }],
 })
 
 const paragraphs = [

@@ -50,25 +50,43 @@ Bussigny-près-Lausanne (Vaud, Switzerland).
 ## Scripts
 
 ```bash
-npm install     # install deps
-npm run dev     # start dev server on http://localhost:3000
-npm run build   # production bundle in dist/
-npm run preview # serve dist/ locally for QA
+npm install      # install deps (downloads a headless Chrome for prerendering)
+npm run dev      # start dev server on http://localhost:3000
+npm run build    # vite build + static prerender → dist/
+npm run build:spa # vite build only, no prerender (debug)
+npm run preview  # serve dist/ locally for QA
 ```
 
-## Deployment (FTP / shared Apache hosting)
+## Prerendering (SSG)
+
+The production host (Infomaniak) serves the site as **static files only**: it
+does **not** execute PHP and **ignores `.htaccess`**, so the usual SPA fallback
+(rewrite every path to `index.html`) is impossible — a direct hit on
+`/adhesion` would 404, which also hurts SEO.
+
+To fix this, `npm run build` runs `scripts/prerender.mjs` after `vite build`: it
+loads each route in a headless Chrome (Puppeteer) and writes a real
+**`dist/<route>/index.html`** with the page's content and per-page `<title>`/
+meta baked in. So:
+
+- `https://bussysport.ch/adhesion` → Apache 301 → `/adhesion/` → serves the
+  prerendered `adhesion/index.html` (no 404), then Vue boots and takes over.
+- Canonical URLs and `sitemap.xml` use the **trailing-slash** form
+  (`/adhesion/`), matching the served file.
+
+The route list lives at the top of `scripts/prerender.mjs` — keep it in sync
+with `src/router/index.js` when adding a page.
+
+## Deployment (FTP / static hosting)
 
 1. `npm run build`
 2. Upload **the entire content of `dist/`** to the web root (typically
-   `public_html/` or `www/`).
-3. Upload `public/contact.php` and `public/contact-config.js` if they are
-   not already present (they are copied verbatim into `dist/` by Vite).
-4. Make sure the bundled `.htaccess` reaches the web root — it provides
-   the SPA fallback (Apache `mod_rewrite`) and cache headers required for
-   Vue Router's history mode.
+   `public_html/` or `www/`), **including the per-route folders** and hidden
+   files. Deleting stale files first (e.g. `lftp mirror -R --delete`) avoids
+   leftovers.
 
-> If hosting runs nginx instead of Apache, add a `try_files $uri $uri/ /index.html;`
-> directive — `.htaccess` will be ignored.
+> A host that honours `.htaccess` (Apache `mod_rewrite`) would not strictly
+> need the prerender for routing, but prerendering is kept for SEO regardless.
 
 ## Contact form
 

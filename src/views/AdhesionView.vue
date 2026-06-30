@@ -12,7 +12,7 @@ useHead({
         "Formulaire d'adhésion à l'association sportive BussySport à Bussigny-près-Lausanne. Rejoignez nos activités running, cross-training, street workout et tournois.",
     },
   ],
-  link: [{ rel: "canonical", href: "https://bussysport.ch/adhesion" }],
+  link: [{ rel: "canonical", href: "https://bussysport.ch/adhesion/" }],
 });
 
 const {

@@ -18,10 +18,10 @@ useHead({
         "Tournois sportifs conviviaux organisés par BussySport à Bussigny. Pétanque, football, beach-volley — dans l'esprit fair-play.",
     },
     { property: 'og:type', content: 'article' },
-    { property: 'og:url', content: 'https://bussysport.ch/tournois' },
+    { property: 'og:url', content: 'https://bussysport.ch/tournois/' },
     { property: 'og:title', content: 'Tournois de Jeux – BussySport Bussigny' },
   ],
-  link: [{ rel: 'canonical', href: 'https://bussysport.ch/tournois' }],
+  link: [{ rel: 'canonical', href: 'https://bussysport.ch/tournois/' }],
 })
 
 const paragraphs = [

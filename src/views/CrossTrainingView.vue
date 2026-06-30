@@ -18,10 +18,10 @@ useHead({
         'Cross-training en extérieur avec BussySport à Bussigny. Force, cardio et endurance pour tous les niveaux. Séances hebdomadaires au grand air.',
     },
     { property: 'og:type', content: 'article' },
-    { property: 'og:url', content: 'https://bussysport.ch/cross-training' },
+    { property: 'og:url', content: 'https://bussysport.ch/cross-training/' },
     { property: 'og:title', content: 'Cross-Training – BussySport Bussigny' },
   ],
-  link: [{ rel: 'canonical', href: 'https://bussysport.ch/cross-training' }],
+  link: [{ rel: 'canonical', href: 'https://bussysport.ch/cross-training/' }],
 })
 
 const paragraphs = [

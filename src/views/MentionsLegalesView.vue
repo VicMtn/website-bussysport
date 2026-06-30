@@ -12,7 +12,7 @@ useHead({
     },
     { name: 'robots', content: 'noindex, follow' },
   ],
-  link: [{ rel: 'canonical', href: 'https://bussysport.ch/mentions-legales' }],
+  link: [{ rel: 'canonical', href: 'https://bussysport.ch/mentions-legales/' }],
 })
 
 const sections = [
