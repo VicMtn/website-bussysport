@@ -56,6 +56,36 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
       }
+      .parent-title {
+        font-weight: bold;
+        color: #0d2137;
+        margin: 18px 0 8px;
+      }
+      .parent-title .optional {
+        font-weight: normal;
+        color: #666;
+      }
+      .parents {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+      .parents .parent-title {
+        margin-top: 0;
+      }
+      .check {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 1.5px solid #333;
+        border-radius: 3px;
+        vertical-align: -2px;
+        margin-right: 6px;
+      }
+      .opt {
+        white-space: nowrap;
+        margin-left: 14px;
+      }
       .signatures {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -128,15 +158,34 @@
     <div class="field-label">Adresse</div>
     <div class="field"></div>
 
-    <h2>2. Identité du parent / tuteur légal</h2>
-    <div class="field-label">Nom et prénom</div>
-    <div class="field"></div>
-    <div class="field-label">Lien de parenté</div>
-    <div class="field"></div>
-    <div class="field-label">Téléphone</div>
-    <div class="field"></div>
-    <div class="field-label">Email</div>
-    <div class="field"></div>
+    <h2>2. Identité des parents / tuteurs légaux</h2>
+
+    <div class="parents">
+      <div>
+        <p class="parent-title">Parent / tuteur légal 1</p>
+        <div class="field-label">Nom et prénom</div>
+        <div class="field"></div>
+        <div class="field-label">Lien de parenté</div>
+        <div class="field"></div>
+        <div class="field-label">Téléphone</div>
+        <div class="field"></div>
+        <div class="field-label">Email</div>
+        <div class="field"></div>
+      </div>
+      <div>
+        <p class="parent-title">
+          Parent / tuteur légal 2 <span class="optional">(le cas échéant)</span>
+        </p>
+        <div class="field-label">Nom et prénom</div>
+        <div class="field"></div>
+        <div class="field-label">Lien de parenté</div>
+        <div class="field"></div>
+        <div class="field-label">Téléphone</div>
+        <div class="field"></div>
+        <div class="field-label">Email</div>
+        <div class="field"></div>
+      </div>
+    </div>
 
     <h2>3. Autorisation</h2>
     <p>
@@ -165,6 +214,21 @@
       </li>
     </ul>
 
+    <p style="margin-top: 18px">
+      <strong>Trajets aller-retour :</strong> j'autorise le/la mineur·e à
+      effectuer seul·e les trajets aller-retour entre son domicile et les lieux
+      d'activité de l'association.
+      <span class="opt"><span class="check"></span> Oui</span>
+      <span class="opt"><span class="check"></span> Non</span>
+    </p>
+
+    <p style="margin-top: 12px">
+      <span class="check"></span> J'autorise le·la responsable de la structure à
+      prendre toutes les mesures médicales ou d'urgence nécessaires (appel des
+      secours, transport et soins dans un établissement adapté) en cas
+      d'accident impliquant le/la mineur·e.
+    </p>
+
     <h2>4. Assurance accident</h2>
     <p>
       Je confirme que le/la mineur·e est couvert·e par une assurance accident
@@ -187,7 +251,12 @@
     <div class="signatures">
       <div>
         <div class="sign-box">
-          <span>Signature du parent / tuteur légal</span>
+          <span>Signature du parent / tuteur légal 1</span>
+        </div>
+      </div>
+      <div>
+        <div class="sign-box">
+          <span>Signature du parent / tuteur légal 2 (le cas échéant)</span>
         </div>
       </div>
       <div>
