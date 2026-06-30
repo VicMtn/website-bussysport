@@ -55,18 +55,18 @@ import { RouterLink } from 'vue-router'
         data-testid="hero-cta"
       >
         <RouterLink
-          :to="{ hash: '#activites' }"
+          to="/adhesion"
           class="btn-primary btn-pulse px-8 py-4 rounded-full font-bold text-base inline-flex items-center gap-3"
+          data-testid="hero-adhesion-btn"
+        >
+          <i class="fas fa-user-plus"></i>Demander l'adhésion
+        </RouterLink>
+        <RouterLink
+          :to="{ hash: '#activites' }"
+          class="btn-outline px-8 py-4 rounded-full font-bold text-base inline-flex items-center gap-3"
           data-testid="hero-activities-btn"
         >
           <i class="fas fa-running"></i>Nos Activités
-        </RouterLink>
-        <RouterLink
-          :to="{ hash: '#contact' }"
-          class="btn-outline px-8 py-4 rounded-full font-bold text-base inline-flex items-center gap-3"
-          data-testid="hero-contact-btn"
-        >
-          <i class="fas fa-envelope"></i>Nous Rejoindre
         </RouterLink>
       </div>
     </div>

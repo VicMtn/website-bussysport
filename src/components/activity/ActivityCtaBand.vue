@@ -20,22 +20,22 @@ defineProps({
         Envie de nous rejoindre ?
       </h2>
       <p class="text-white/65 text-base sm:text-lg mb-8 leading-relaxed">
-        Contactez-nous pour vous inscrire ou poser vos questions — nous vous
-        répondrons rapidement.
+        Remplissez le formulaire d'adhésion en quelques minutes, ou contactez-nous
+        si vous avez des questions — nous vous répondrons rapidement.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <RouterLink
-          :to="{ name: 'home', hash: '#contact' }"
+          to="/adhesion"
           class="btn-primary btn-pulse px-8 py-4 rounded-full font-bold text-base inline-flex items-center justify-center gap-3"
         >
-          <i class="fas fa-paper-plane"></i>{{ cta }}
+          <i class="fas fa-user-plus"></i>{{ cta }}
         </RouterLink>
-        <a
-          href="mailto:info@bussysport.ch"
+        <RouterLink
+          :to="{ name: 'home', hash: '#contact' }"
           class="btn-outline px-8 py-4 rounded-full font-bold text-base inline-flex items-center justify-center gap-3"
         >
-          <i class="fas fa-at"></i>info@bussysport.ch
-        </a>
+          <i class="fas fa-envelope"></i>Nous contacter
+        </RouterLink>
       </div>
     </div>
   </section>

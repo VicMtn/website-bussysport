@@ -75,10 +75,10 @@ defineProps({
       </div>
 
       <RouterLink
-        :to="{ name: 'home', hash: '#contact' }"
+        to="/adhesion"
         class="btn-primary btn-pulse hero-cta px-8 py-4 rounded-full font-bold text-base inline-flex items-center gap-3"
       >
-        <i class="fas fa-paper-plane"></i>{{ activity.cta }}
+        <i class="fas fa-user-plus"></i>{{ activity.cta }}
       </RouterLink>
     </div>
   </section>
