@@ -2,8 +2,6 @@ import { computed, reactive, ref } from "vue";
 import { activities } from "@/data/activities";
 import { useSubmissionThrottle } from "./useSubmissionThrottle";
 
-const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
-
 const MAIL_FALLBACK_HTML =
   'Si le problème persiste, écrivez-nous à <a href="mailto:info@bussysport.ch" class="underline font-bold">info@bussysport.ch</a>.';
 
@@ -416,8 +414,12 @@ export function useAdhesionForm({ throttle } = {}) {
       return;
     }
 
-    const accessKey = (window.BUSSYSPORT_WEB3FORMS_ACCESS_KEY || "").trim();
-    if (!accessKey) {
+    // Endpoint Forminit du formulaire d'adhésion (gère les pièces jointes,
+    // contrairement à Web3Forms gratuit utilisé pour le contact). C'est l'URL
+    // publique du formulaire (https://forminit.com/f/<id>), PAS la clé secrète
+    // sk_live_… qui ne doit jamais être exposée côté client (repo public).
+    const endpoint = (window.BUSSYSPORT_FORMINIT_ENDPOINT || "").trim();
+    if (!endpoint) {
       showError(`Le formulaire n'est pas configuré. ${MAIL_FALLBACK_HTML}`);
       return;
     }
@@ -425,33 +427,23 @@ export function useAdhesionForm({ throttle } = {}) {
     loading.value = true;
 
     try {
-      const fullName = `${form.firstName.trim()} ${form.lastName.trim()}`;
-
-      // multipart/form-data : requis pour joindre l'autorisation parentale.
-      // Web3Forms affiche chaque champ posté comme une ligne du mail (la clé =
-      // libellé). Pour un mail 100 % français, on n'envoie QUE `message` (le mot
-      // « Message » est identique en FR) avec tout le récapitulatif ; le nom et
-      // l'email sont déjà dans ce récap. `subject`, `from_name`, `replyto` et
-      // `access_key` sont des champs spéciaux non affichés comme données.
+      // multipart/form-data : requis par Forminit pour joindre l'autorisation
+      // parentale (≤ 25 Mo). Forminit n'enregistre QUE les champs préfixés
+      // « fi-{type}- » ; le sujet et le destinataire (info@bussysport.ch) se
+      // configurent dans le dashboard Forminit, pas ici.
       const body = new FormData();
-      body.append("access_key", accessKey);
-      body.append(
-        "subject",
-        `[BussySport] Nouvelle demande d'adhésion — ${fullName}`,
-      );
-      body.append("from_name", "BussySport — Adhésion");
-      body.append("replyto", form.email.trim());
-      body.append("message", buildSummary());
+      body.append("fi-sender-email", form.email.trim());
+      body.append("fi-text-message", buildSummary());
 
       if (parentAuthFile.value) {
         body.append(
-          "attachment",
+          "fi-file-authorization",
           parentAuthFile.value,
           parentAuthFile.value.name,
         );
       }
 
-      const res = await fetch(WEB3FORMS_ENDPOINT, {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { Accept: "application/json" },
         body,

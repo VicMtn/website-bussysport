@@ -87,28 +87,37 @@ A honeypot (`website` field) blocks naive bots.
 ## Adhesion form
 
 The membership form at `/adhesion` (`useAdhesionForm.js`) is sent through
-**Web3Forms** — the same no-backend service as the contact form, so it works on
-static FTP hosting with **no PHP required**. It posts `multipart/form-data` to
-`https://api.web3forms.com/submit` so the optional parental-authorization file
-(16–17 yo) can be attached.
+**Forminit** (forminit.com) — a no-backend form service that, unlike the free
+Web3Forms tier, **supports file attachments**, needed for the optional
+parental-authorization upload (16–17 yo). It posts `multipart/form-data` to the
+Forminit form endpoint, with the file as `fi-file-authorization`.
 
-Setup: reuse the Web3Forms access key already set in `public/contact-config.js`
-(`window.BUSSYSPORT_WEB3FORMS_ACCESS_KEY`), and make sure the recipient address
-for that key is `info@bussysport.ch` in your Web3Forms dashboard.
+> Note: the **contact** form stays on Web3Forms; only the adhesion form uses
+> Forminit, because Web3Forms reserves file uploads for its paid plan.
 
-Spam protection (Web3Forms free tier):
+Setup:
+
+1. Create a form on [forminit.com](https://forminit.com) — an **unprotected**
+   form, so it accepts client-side submissions without a secret key.
+2. In the form settings, set the notification recipient to `info@bussysport.ch`
+   (and the email subject if you like).
+3. Copy the form's submit URL (`https://forminit.com/f/<id>`) into
+   `public/contact-config.js`:
+   ```js
+   window.BUSSYSPORT_FORMINIT_ENDPOINT = "https://forminit.com/f/your-form-id";
+   ```
+   Use the **public form URL** (the id in the path), never the secret
+   `sk_live_…` API key — this file is served to the browser and the repo is public.
+
+Forminit only records fields prefixed `fi-{type}-`; the form sends
+`fi-sender-email`, `fi-text-message` (the full French summary) and, when
+present, `fi-file-authorization`. Free tier allows up to 25 MB per submission.
+
+Spam protection:
 
 - Honeypot (`website` field) — naive bots get a silent fake success.
 - Client-side cooldown between submissions (10 s).
-- Web3Forms built-in spam filtering.
-
-File upload: the free tier accepts a single attachment up to 5 MB (PDF/JPG/PNG),
-which matches the parental-authorization limit enforced client-side.
-
-> **Stronger anti-bot (optional):** Cloudflare Turnstile server-side
-> verification is a Web3Forms **Pro** feature. If you upgrade, enable it in the
-> Web3Forms dashboard (paste the Turnstile secret there) and add the widget to
-> the form — nothing needs to run on your own server.
+- Forminit's built-in spam handling.
 
 ## SEO
 
