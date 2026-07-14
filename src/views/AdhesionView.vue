@@ -2,6 +2,7 @@
 import { useHead } from "@unhead/vue";
 import { RouterLink } from "vue-router";
 import { useAdhesionForm } from "@/composables/useAdhesionForm";
+import { activities } from "@/data/activities";
 
 useHead({
   title: "Demande d'adhésion – BussySport Bussigny",
@@ -14,6 +15,29 @@ useHead({
   ],
   link: [{ rel: "canonical", href: "https://bussysport.ch/adhesion/" }],
 });
+
+const activityAccent = {
+  "courses-a-pied": {
+    color: "#1565C0",
+    bg: "rgba(21,101,192,.1)",
+    blurb: "Sorties running pour tous les niveaux",
+  },
+  "cross-training": {
+    color: "#0288D1",
+    bg: "rgba(2,136,209,.1)",
+    blurb: "Force et cardio en plein air",
+  },
+  "street-workout": {
+    color: "#D32F2F",
+    bg: "rgba(211,47,47,.08)",
+    blurb: "Calisthenics au poids du corps",
+  },
+  tournois: {
+    color: "#F9A825",
+    bg: "rgba(249,168,37,.12)",
+    blurb: "Événements conviviaux au village",
+  },
+};
 
 const {
   form,
@@ -57,8 +81,170 @@ const {
     </div>
   </section>
 
+  <!-- Avantages adhésion -->
+  <section class="py-16 sm:py-20 bg-white border-b border-gray-100">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 sm:mb-14">
+        <div class="flex items-center justify-center gap-4 mb-5">
+          <div class="swiss-line"></div>
+          <span
+            class="text-xs font-bold uppercase tracking-widest text-gray-400"
+          >
+            Tarif adhésion
+          </span>
+          <div class="swiss-line"></div>
+        </div>
+        <h2
+          class="font-display font-black text-3xl sm:text-4xl text-gray-900 mb-4 leading-tight"
+        >
+          Une seule adhésion.<br class="hidden sm:block" />
+          <span class="text-primary">Toutes les activités.</span>
+        </h2>
+        <p
+          class="text-gray-500 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
+        >
+          Pour
+          <strong class="text-gray-800">100&nbsp;CHF par an</strong>, vous
+          rejoignez l’association et accédez librement à l’ensemble de nos
+          disciplines — sans frais additionnels, au rythme qui vous convient.
+        </p>
+      </div>
+
+      <!-- Schéma : 1 tarif → 4 activités -->
+      <div class="flex flex-col items-center" aria-hidden="true">
+        <!-- Badge tarif -->
+        <div
+          class="w-full max-w-sm sm:max-w-none sm:w-auto px-6 sm:px-8 py-5 rounded-2xl text-white text-center shadow-lg"
+          style="background: linear-gradient(135deg, #0d2137 0%, #1565c0 100%)"
+        >
+          <p
+            class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-1"
+          >
+            Cotisation annuelle
+          </p>
+          <p class="font-display font-black text-3xl sm:text-4xl leading-none">
+            100&nbsp;CHF
+          </p>
+          <p class="text-sm text-white/70 mt-1.5">
+            Accès à toutes les activités
+          </p>
+        </div>
+
+        <!-- Mobile : flow vertical centré -->
+        <div class="sm:hidden w-full max-w-sm flex flex-col items-center">
+          <div class="w-px h-5 bg-primary/25"></div>
+          <div
+            class="w-2.5 h-2.5 rounded-full bg-primary/40 ring-4 ring-primary/10"
+          ></div>
+          <div class="w-px h-4 bg-primary/25"></div>
+
+          <ul class="w-full">
+            <li
+              v-for="(activity, idx) in activities"
+              :key="`m-${activity.slug}`"
+              class="flex flex-col items-center"
+            >
+              <div
+                class="w-full flex items-center gap-3.5 py-3 px-3.5 rounded-xl bg-gray-50 border border-gray-100"
+              >
+                <div
+                  class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                  :style="{ background: activityAccent[activity.slug].bg }"
+                >
+                  <i
+                    :class="['fas', activity.icon, 'text-lg']"
+                    :style="{ color: activityAccent[activity.slug].color }"
+                  ></i>
+                </div>
+                <div class="min-w-0">
+                  <p class="font-display font-bold text-sm text-gray-900">
+                    {{ activity.shortLabel }}
+                  </p>
+                  <p class="text-xs text-gray-400 leading-snug mt-0.5">
+                    {{ activityAccent[activity.slug].blurb }}
+                  </p>
+                </div>
+              </div>
+              <div
+                v-if="idx < activities.length - 1"
+                class="w-px h-3 bg-primary/20"
+              ></div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Desktop : branchement horizontal -->
+        <div class="hidden sm:flex flex-col items-center w-full max-w-3xl">
+          <div class="flex flex-col items-center">
+            <div class="w-px h-8 bg-primary/25"></div>
+            <div
+              class="w-2.5 h-2.5 rounded-full bg-primary/40 ring-4 ring-primary/10"
+            ></div>
+            <div class="w-px h-4 bg-primary/25"></div>
+          </div>
+
+          <div class="relative w-full">
+            <div
+              class="absolute top-0 left-[12.5%] right-[12.5%] h-px bg-primary/20"
+            ></div>
+            <div class="grid grid-cols-4 gap-5">
+              <div
+                v-for="activity in activities"
+                :key="activity.slug"
+                class="relative flex flex-col items-center text-center pt-3"
+              >
+                <div
+                  class="absolute top-0 left-1/2 -translate-x-1/2 w-px h-3 bg-primary/20"
+                ></div>
+                <div
+                  class="w-16 h-16 rounded-2xl flex items-center justify-center mb-3"
+                  :style="{ background: activityAccent[activity.slug].bg }"
+                >
+                  <i
+                    :class="['fas', activity.icon, 'text-2xl']"
+                    :style="{ color: activityAccent[activity.slug].color }"
+                  ></i>
+                </div>
+                <p class="font-display font-bold text-sm text-gray-900 mb-1">
+                  {{ activity.shortLabel }}
+                </p>
+                <p class="text-xs text-gray-400 leading-snug max-w-[9.5rem]">
+                  {{ activityAccent[activity.slug].blurb }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p
+        class="text-center text-sm text-gray-400 mt-10 max-w-xl mx-auto leading-relaxed"
+      >
+        Un tarif unique, une communauté engagée — tout est inclus dans votre
+        adhésion.
+      </p>
+    </div>
+  </section>
+
   <section class="py-16 bg-gray-50">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+        <div class="flex items-center justify-center gap-4 mb-5">
+          <div class="swiss-line"></div>
+          <span
+            class="text-xs font-bold uppercase tracking-widest text-gray-400"
+          >
+            Formulaire
+          </span>
+          <div class="swiss-line"></div>
+        </div>
+        <h2
+          class="font-display font-black text-3xl sm:text-4xl text-gray-900 mb-3"
+        >
+          Remplir ma demande
+        </h2>
+      </div>
+
       <form
         class="bg-white p-8 sm:p-10 rounded-2xl border border-gray-100 shadow-sm space-y-10"
         novalidate
@@ -368,8 +554,8 @@ const {
               </label>
             </div>
             <p class="text-xs text-gray-400 mt-2">
-              En répondant « Non », je certifie ne pas avoir de contre-indication
-              médicale à la pratique sportive.
+              En répondant « Non », je certifie ne pas avoir de
+              contre-indication médicale à la pratique sportive.
             </p>
           </div>
 
