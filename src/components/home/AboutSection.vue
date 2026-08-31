@@ -26,7 +26,7 @@ const pillars = [
 ]
 
 const stats = [
-  { value: '10+', label: 'Membres', testid: 'stat-members' },
+  { value: '14', label: 'Membres au comité', testid: 'stat-members' },
   { value: '4', label: 'Activités' },
   { value: '100%', label: 'Bénévole' },
 ]
