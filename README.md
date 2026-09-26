@@ -19,8 +19,8 @@ Bussigny-près-Lausanne (Vaud, Switzerland).
 ├── index.html                   # Vite entry — mounts <App /> in #app
 ├── vite.config.js
 ├── public/
-│   ├── .htaccess                # Apache SPA fallback + cache headers
-│   ├── contact.php              # PHP SMTP handler (FTP/Apache target)
+│   ├── .htaccess                # legacy — ignored by the production host
+│   ├── contact.php              # legacy PHP handler — NOT executed in production
 │   ├── contact-config.js        # Web3Forms access key (window global)
 │   ├── images/                  # logo + blason
 │   ├── robots.txt
@@ -69,8 +69,11 @@ loads each route in a headless Chrome (Puppeteer) and writes a real
 **`dist/<route>/index.html`** with the page's content and per-page `<title>`/
 meta baked in. So:
 
-- `https://bussysport.ch/adhesion` → Apache 301 → `/adhesion/` → serves the
+- `https://bussysport.ch/adhesion` → 301 → `/adhesion/` → serves the
   prerendered `adhesion/index.html` (no 404), then Vue boots and takes over.
+  The 301 is Apache's built-in trailing-slash redirect for directories
+  (`mod_dir` `DirectorySlash`), not a `.htaccess` rule. It points to `http://`;
+  HSTS brings the browser back to HTTPS.
 - Canonical URLs and `sitemap.xml` use the **trailing-slash** form
   (`/adhesion/`), matching the served file.
 
@@ -98,7 +101,9 @@ The contact form supports two backends, both via `useContactForm.js`:
    window.BUSSYSPORT_WEB3FORMS_ACCESS_KEY = "your-key-here";
    ```
 2. **Native PHP fallback** (`public/contact.php`) — used automatically when
-   no Web3Forms key is set. Requires PHP-enabled Apache hosting.
+   no Web3Forms key is set. Requires PHP-enabled hosting, so it does **not**
+   work on the current Infomaniak static host (the file is served as plain
+   text there): always keep a Web3Forms key configured.
 
 A honeypot (`website` field) blocks naive bots.
 
@@ -147,5 +152,13 @@ in `App.vue`.
 ## Legacy URLs
 
 The old `.html` URLs from the static-site era (`/courses-a-pied.html`, …)
-are 301-redirected to their clean-URL equivalents inside the router so
-existing inbound links keep working.
+keep working through two mechanisms:
+
+- **In production**, `scripts/prerender.mjs` writes a small
+  `dist/<page>.html` for each one (`LEGACY_REDIRECTS`). It redirects
+  immediately to the clean URL (meta refresh + `location.replace`) and
+  declares the new URL as canonical. No server-side 301 is possible on the
+  static host.
+- **In dev / SPA navigation**, the router's `redirect` entries handle them.
+
+Keep both lists in sync when renaming a page.

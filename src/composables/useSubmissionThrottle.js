@@ -10,9 +10,9 @@ const DEFAULT_COOLDOWN_MS = 30_000
  * survives a full page reload — a naive bot loop that calls
  * window.location.reload() between submits still gets blocked.
  *
- * The server-side limiter in contact.php remains the security boundary;
- * this composable is purely there to spare the server obvious abuse and
- * give the user immediate feedback.
+ * This is a UX guard, not a security boundary: it is trivially bypassed.
+ * Real abuse protection comes from the form services (Web3Forms, Forminit)
+ * — the PHP limiter in contact.php does not run on the static host.
  *
  * @param {object} [options]
  * @param {string} [options.key]        localStorage key to use
@@ -41,7 +41,7 @@ export function useSubmissionThrottle({
     try {
       window.localStorage.setItem(key, String(now()))
     } catch {
-      // Quota / private mode — silently degrade. The server still rate-limits.
+      // Quota / private mode — silently degrade (the cooldown is best-effort).
     }
   }
 
