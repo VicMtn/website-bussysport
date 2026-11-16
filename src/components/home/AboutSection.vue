@@ -33,7 +33,7 @@ const stats = [
 </script>
 
 <template>
-  <section id="apropos" class="py-24 bg-white" data-testid="about-section">
+  <section id="apropos" class="pt-24 pb-12 sm:pb-16 bg-white" data-testid="about-section">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-16 items-center">
         <div v-reveal>
@@ -101,21 +101,21 @@ const stats = [
       </div>
 
       <div
-        class="grid grid-cols-2 lg:grid-cols-3 gap-5 mt-20 pt-12 border-t border-gray-100"
+        class="grid grid-cols-3 gap-3 sm:gap-5 mt-10 pt-8 sm:mt-14 sm:pt-10 border-t border-gray-100"
       >
         <div
           v-for="stat in stats"
           :key="stat.label"
-          class="stat-card text-center p-7 rounded-2xl bg-gray-50"
+          class="stat-card text-center px-2 py-4 sm:p-7 rounded-xl sm:rounded-2xl bg-gray-50"
         >
           <div
-            class="font-display font-black text-4xl mb-2 text-primary"
+            class="font-display font-black text-2xl sm:text-4xl mb-1 sm:mb-2 text-primary"
             :data-testid="stat.testid"
           >
             {{ stat.value }}
           </div>
           <div
-            class="text-gray-400 text-xs font-bold uppercase tracking-widest"
+            class="text-gray-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-widest"
           >
             {{ stat.label }}
           </div>
