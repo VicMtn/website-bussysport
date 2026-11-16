@@ -10,10 +10,15 @@ function anchorTo(hash) {
 </script>
 
 <template>
-  <footer class="bg-navy pt-16 pb-8" data-testid="footer">
+  <footer
+    class="bg-navy pt-12 md:pt-16 pb-[calc(2rem+env(safe-area-inset-bottom))] md:pb-8"
+    data-testid="footer"
+  >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-3 gap-12 pb-12 border-b border-white/10">
-        <div>
+      <div
+        class="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10 md:gap-12 pb-10 md:pb-12 border-b border-white/10"
+      >
+        <div class="col-span-2 md:col-span-1">
           <RouterLink
             :to="anchorTo('#accueil')"
             class="flex items-center gap-3 mb-5"
@@ -49,7 +54,7 @@ function anchorTo(hash) {
               rel="noopener noreferrer"
               aria-label="Instagram"
               data-testid="footer-instagram"
-              class="social-icon w-10 h-10 rounded-xl flex items-center justify-center text-white/50"
+              class="social-icon w-11 h-11 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-white/50"
               style="
                 background: rgba(255, 255, 255, 0.06);
                 border: 1px solid rgba(255, 255, 255, 0.1);
@@ -63,7 +68,7 @@ function anchorTo(hash) {
               rel="noopener noreferrer"
               aria-label="Facebook"
               data-testid="footer-facebook"
-              class="social-icon w-10 h-10 rounded-xl flex items-center justify-center text-white/50"
+              class="social-icon w-11 h-11 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-white/50"
               style="
                 background: rgba(255, 255, 255, 0.06);
                 border: 1px solid rgba(255, 255, 255, 0.1);
@@ -76,57 +81,57 @@ function anchorTo(hash) {
 
         <div>
           <h3
-            class="font-display font-bold text-white text-xs uppercase tracking-widest mb-6"
+            class="font-display font-bold text-white text-xs uppercase tracking-widest mb-4 md:mb-6"
           >
             Navigation
           </h3>
-          <ul class="space-y-3.5">
+          <ul class="space-y-1 md:space-y-3.5">
             <li>
               <RouterLink
                 :to="anchorTo('#accueil')"
-                class="text-white/45 hover:text-white text-sm font-medium transition-colors"
+                class="block py-1.5 md:inline md:py-0 text-white/45 hover:text-white text-sm font-medium transition-colors break-words"
                 >Accueil</RouterLink
               >
             </li>
             <li>
               <RouterLink
                 :to="anchorTo('#apropos')"
-                class="text-white/45 hover:text-white text-sm font-medium transition-colors"
+                class="block py-1.5 md:inline md:py-0 text-white/45 hover:text-white text-sm font-medium transition-colors break-words"
                 >Notre Association</RouterLink
               >
             </li>
             <li>
               <RouterLink
                 :to="anchorTo('#activites')"
-                class="text-white/45 hover:text-white text-sm font-medium transition-colors"
+                class="block py-1.5 md:inline md:py-0 text-white/45 hover:text-white text-sm font-medium transition-colors break-words"
                 >Activités</RouterLink
               >
             </li>
             <li>
               <RouterLink
                 :to="anchorTo('#contact')"
-                class="text-white/45 hover:text-white text-sm font-medium transition-colors"
+                class="block py-1.5 md:inline md:py-0 text-white/45 hover:text-white text-sm font-medium transition-colors break-words"
                 >Contact</RouterLink
               >
             </li>
             <li>
               <RouterLink
                 to="/adhesion"
-                class="text-white/45 hover:text-white text-sm font-medium transition-colors"
+                class="block py-1.5 md:inline md:py-0 text-white/45 hover:text-white text-sm font-medium transition-colors break-words"
                 >Adhésion</RouterLink
               >
             </li>
             <li>
               <RouterLink
                 to="/forme-sante"
-                class="text-white/45 hover:text-white text-sm font-medium transition-colors"
+                class="block py-1.5 md:inline md:py-0 text-white/45 hover:text-white text-sm font-medium transition-colors break-words"
                 >Forme & Santé</RouterLink
               >
             </li>
             <li>
               <a
                 href="mailto:info@bussysport.ch"
-                class="text-white/45 hover:text-white text-sm font-medium transition-colors"
+                class="block py-1.5 md:inline md:py-0 text-white/45 hover:text-white text-sm font-medium transition-colors break-words"
                 >info@bussysport.ch</a
               >
             </li>
@@ -135,15 +140,15 @@ function anchorTo(hash) {
 
         <div>
           <h3
-            class="font-display font-bold text-white text-xs uppercase tracking-widest mb-6"
+            class="font-display font-bold text-white text-xs uppercase tracking-widest mb-4 md:mb-6"
           >
             Activités
           </h3>
-          <ul class="space-y-3.5">
+          <ul class="space-y-1 md:space-y-3.5">
             <li v-for="activity in activities" :key="activity.slug">
               <RouterLink
                 :to="{ name: activity.slug }"
-                class="text-white/45 hover:text-white text-sm font-medium transition-colors flex items-center gap-2.5"
+                class="text-white/45 hover:text-white text-sm font-medium transition-colors flex items-center gap-2.5 py-1.5 md:py-0"
               >
                 <i
                   :class="['fas', activity.icon, 'text-xs text-primary-light']"
@@ -153,7 +158,7 @@ function anchorTo(hash) {
               </RouterLink>
             </li>
             <li
-              class="flex items-center gap-2.5 text-white/45 text-sm font-medium"
+              class="flex items-center gap-2.5 py-1.5 md:py-0 text-white/45 text-sm font-medium"
             >
               <i
                 class="fas fa-ellipsis text-xs text-primary-light"
@@ -166,7 +171,7 @@ function anchorTo(hash) {
       </div>
 
       <div
-        class="flex flex-col sm:flex-row justify-between items-center pt-8 gap-4"
+        class="flex flex-col-reverse sm:flex-row justify-between items-center pt-6 md:pt-8 gap-3 sm:gap-4 text-center sm:text-left"
       >
         <p class="text-white/30 text-xs leading-relaxed">
           © 2025 BussySport — Association à but non lucratif — Bussigny, Vaud,
