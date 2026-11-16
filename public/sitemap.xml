@@ -48,6 +48,34 @@
   </url>
 
   <url>
+    <loc>https://bussysport.ch/forme-sante/</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://bussysport.ch/forme-sante/nutrition/</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://bussysport.ch/forme-sante/exercices/</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://bussysport.ch/forme-sante/etirements/</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
     <loc>https://bussysport.ch/mentions-legales/</loc>
     <lastmod>2026-05-08</lastmod>
     <changefreq>yearly</changefreq>

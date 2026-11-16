@@ -1,3 +1,7 @@
+> ⚠️ **Document obsolète** — décrit la première version (HTML statique + Tailwind CDN + contact.php, 2025).
+> Le site est aujourd'hui une app Vue 3 / Vite prérendue, hébergée en statique chez Infomaniak (pas de PHP).
+> Référence à jour : `README.md` et `CLAUDE.md`. Seul le backlog ci-dessous peut encore servir d'idées.
+
 # BussySport – Landing Page
 
 ## Informations du Projet

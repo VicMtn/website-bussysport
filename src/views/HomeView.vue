@@ -1,166 +1,191 @@
 <script setup>
-import { useHead } from '@unhead/vue'
-import HeroSection from '@/components/home/HeroSection.vue'
-import AboutSection from '@/components/home/AboutSection.vue'
-import ActivitiesSection from '@/components/home/ActivitiesSection.vue'
-import CtaBand from '@/components/home/CtaBand.vue'
-import ContactSection from '@/components/home/ContactSection.vue'
+import { useHead } from "@unhead/vue";
+import { useRoute } from "vue-router";
+import HeroSection from "@/components/home/HeroSection.vue";
+import AboutSection from "@/components/home/AboutSection.vue";
+import ActivitiesSection from "@/components/home/ActivitiesSection.vue";
+import WomensWorkoutSection from "@/components/home/WomensWorkoutSection.vue";
+import SanteTeaser from "@/components/home/SanteTeaser.vue";
+import CtaBand from "@/components/home/CtaBand.vue";
+import ContactSection from "@/components/home/ContactSection.vue";
+
+const route = useRoute();
 
 const description =
-  'Association BussySport est une association sportive de Bussigny. Courses à pied, cross-training, street workout et tournois de jeux. Rejoignez notre communauté sportive au cœur du canton de Vaud.'
+  "Association BussySport est une association sportive de Bussigny. Courses à pied, cross-training, street workout, women's workout et tournois de jeux. Rejoignez notre communauté sportive au cœur du canton de Vaud.";
 
 useHead({
-  title: '',
+  title: "",
   meta: [
-    { name: 'title', content: 'Association BussySport' },
-    { name: 'description', content: description },
+    { name: "title", content: "Association BussySport" },
+    { name: "description", content: description },
     {
-      name: 'keywords',
+      name: "keywords",
       content:
-        'BussySport, sport Bussigny, association sportive Bussigny, course à pied Bussigny, cross-training Vaud, street workout Bussigny, tournoi sportif Bussigny, sport communautaire Vaud, fitness Bussigny, musculation extérieur Bussigny',
+        "BussySport, sport Bussigny, association sportive Bussigny, course à pied Bussigny, cross-training Vaud, street workout Bussigny, tournoi sportif Bussigny, women's workout Bussigny, sport femmes Bussigny, fitness féminin Vaud, sport communautaire Vaud, fitness Bussigny, musculation extérieur Bussigny",
     },
     {
-      name: 'robots',
+      name: "robots",
       content:
-        'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+        "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
     },
-    { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: 'https://bussysport.ch/' },
-    { property: 'og:title', content: 'BussySport – Le Sport au Cœur de Bussigny' },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: "https://bussysport.ch/" },
     {
-      property: 'og:description',
-      content:
-        'Association sportive dédiée à la promotion du sport et du bien-être pour tous les habitants de Bussigny, Vaud. Courses à pied, cross-training, street workout et tournois.',
+      property: "og:title",
+      content: "BussySport – Le Sport au Cœur de Bussigny",
     },
-    { property: 'og:image', content: 'https://bussysport.ch/images/logo.jpeg' },
-    { property: 'og:image:width', content: '1200' },
-    { property: 'og:image:height', content: '630' },
-    { name: 'twitter:url', content: 'https://bussysport.ch/' },
-    { name: 'twitter:title', content: 'BussySport – Le Sport au Cœur de Bussigny' },
     {
-      name: 'twitter:description',
+      property: "og:description",
       content:
-        'Association sportive dédiée à la promotion du sport et du bien-être à Bussigny, Vaud, Suisse.',
+        "Association sportive dédiée à la promotion du sport et du bien-être pour tous les habitants de Bussigny, Vaud. Courses à pied, cross-training, street workout et tournois.",
     },
-    { name: 'twitter:image', content: 'https://bussysport.ch/images/logo.jpeg' },
+    { property: "og:image", content: "https://bussysport.ch/images/logo.jpeg" },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { name: "twitter:url", content: "https://bussysport.ch/" },
+    {
+      name: "twitter:title",
+      content: "BussySport – Le Sport au Cœur de Bussigny",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Association sportive dédiée à la promotion du sport et du bien-être à Bussigny, Vaud, Suisse.",
+    },
+    {
+      name: "twitter:image",
+      content: "https://bussysport.ch/images/logo.jpeg",
+    },
   ],
   link: [
-    { rel: 'canonical', href: 'https://bussysport.ch/' },
-    { rel: 'alternate', hreflang: 'fr', href: 'https://bussysport.ch/' },
-    { rel: 'alternate', hreflang: 'fr-ch', href: 'https://bussysport.ch/' },
-    { rel: 'alternate', hreflang: 'x-default', href: 'https://bussysport.ch/' },
+    { rel: "canonical", href: "https://bussysport.ch/" },
+    { rel: "alternate", hreflang: "fr", href: "https://bussysport.ch/" },
+    { rel: "alternate", hreflang: "fr-ch", href: "https://bussysport.ch/" },
+    { rel: "alternate", hreflang: "x-default", href: "https://bussysport.ch/" },
   ],
   script: [
     {
-      type: 'application/ld+json',
+      type: "application/ld+json",
       innerHTML: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@graph': [
+        "@context": "https://schema.org",
+        "@graph": [
           {
-            '@type': 'SportsClub',
-            '@id': 'https://bussysport.ch/#organization',
-            name: 'BussySport',
-            alternateName: 'Bussy Sport',
+            "@type": "SportsClub",
+            "@id": "https://bussysport.ch/#organization",
+            name: "BussySport",
+            alternateName: "Bussy Sport",
             description:
               "Association sportive de Bussigny dédiée à la promotion du sport, de la santé et du bien-être communautaire pour tous les habitants de Bussigny-près-Lausanne.",
-            url: 'https://bussysport.ch',
+            url: "https://bussysport.ch",
             logo: {
-              '@type': 'ImageObject',
-              url: 'https://bussysport.ch/images/logo.jpeg',
+              "@type": "ImageObject",
+              url: "https://bussysport.ch/images/logo.jpeg",
               width: 512,
               height: 512,
             },
-            email: 'info@bussysport.ch',
-            foundingDate: '2025',
+            email: "info@bussysport.ch",
+            foundingDate: "2025",
             address: {
-              '@type': 'PostalAddress',
-              streetAddress: 'Bussigny',
-              addressLocality: 'Bussigny-près-Lausanne',
-              postalCode: '1030',
-              addressRegion: 'Vaud',
-              addressCountry: 'CH',
+              "@type": "PostalAddress",
+              streetAddress: "Bussigny",
+              addressLocality: "Bussigny-près-Lausanne",
+              postalCode: "1030",
+              addressRegion: "Vaud",
+              addressCountry: "CH",
             },
             geo: {
-              '@type': 'GeoCoordinates',
+              "@type": "GeoCoordinates",
               latitude: 46.5522,
               longitude: 6.5558,
             },
             areaServed: {
-              '@type': 'City',
-              name: 'Bussigny-près-Lausanne',
-              sameAs: 'https://www.wikidata.org/wiki/Q70568',
+              "@type": "City",
+              name: "Bussigny-près-Lausanne",
+              sameAs: "https://www.wikidata.org/wiki/Q70568",
             },
             sameAs: [
-              'https://www.instagram.com/bussysport',
-              'https://www.facebook.com/bussysport',
+              "https://www.instagram.com/bussysport",
+              "https://www.facebook.com/bussysport",
             ],
             hasOfferCatalog: {
-              '@type': 'OfferCatalog',
-              name: 'Activités sportives',
+              "@type": "OfferCatalog",
+              name: "Activités sportives",
               itemListElement: [
                 {
-                  '@type': 'Offer',
+                  "@type": "Offer",
                   itemOffered: {
-                    '@type': 'Service',
-                    name: 'Courses à pied',
-                    description: 'Sorties running pour tous niveaux à Bussigny',
+                    "@type": "Service",
+                    name: "Courses à pied",
+                    description: "Sorties running pour tous niveaux à Bussigny",
                   },
                 },
                 {
-                  '@type': 'Offer',
+                  "@type": "Offer",
                   itemOffered: {
-                    '@type': 'Service',
-                    name: 'Cross-Training',
-                    description: 'Entraînement fonctionnel en extérieur',
+                    "@type": "Service",
+                    name: "Cross-Training",
+                    description: "Entraînement fonctionnel en extérieur",
                   },
                 },
                 {
-                  '@type': 'Offer',
+                  "@type": "Offer",
                   itemOffered: {
-                    '@type': 'Service',
-                    name: 'Street Workout',
-                    description: 'Musculation en plein air et calisthenics',
+                    "@type": "Service",
+                    name: "Street Workout",
+                    description: "Musculation en plein air et calisthenics",
                   },
                 },
                 {
-                  '@type': 'Offer',
+                  "@type": "Offer",
                   itemOffered: {
-                    '@type': 'Service',
-                    name: 'Tournois de jeux',
-                    description: 'Organisation de tournois sportifs conviviaux',
+                    "@type": "Service",
+                    name: "Women's Workout",
+                    description:
+                      "Séances de renforcement et cardio entre femmes, tous niveaux",
+                  },
+                },
+                {
+                  "@type": "Offer",
+                  itemOffered: {
+                    "@type": "Service",
+                    name: "Tournois de jeux",
+                    description: "Organisation de tournois sportifs conviviaux",
                   },
                 },
               ],
             },
             contactPoint: {
-              '@type': 'ContactPoint',
-              contactType: 'customer service',
-              email: 'info@bussysport.ch',
-              availableLanguage: ['French'],
+              "@type": "ContactPoint",
+              contactType: "customer service",
+              email: "info@bussysport.ch",
+              availableLanguage: ["French"],
             },
             nonprofit: true,
           },
           {
-            '@type': 'WebSite',
-            '@id': 'https://bussysport.ch/#website',
-            url: 'https://bussysport.ch',
-            name: 'BussySport',
+            "@type": "WebSite",
+            "@id": "https://bussysport.ch/#website",
+            url: "https://bussysport.ch",
+            name: "BussySport",
             description:
               "Site officiel de l'association BussySport à Bussigny, Vaud, Suisse",
-            inLanguage: 'fr-CH',
-            publisher: { '@id': 'https://bussysport.ch/#organization' },
+            inLanguage: "fr-CH",
+            publisher: { "@id": "https://bussysport.ch/#organization" },
           },
         ],
       }),
     },
   ],
-})
+});
 </script>
 
 <template>
   <HeroSection />
   <AboutSection />
   <ActivitiesSection />
+  <WomensWorkoutSection />
+  <SanteTeaser />
   <CtaBand />
-  <ContactSection />
+  <ContactSection :initial-subject="route.query.sujet ?? ''" />
 </template>

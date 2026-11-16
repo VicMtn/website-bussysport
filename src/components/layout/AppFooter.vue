@@ -117,6 +117,13 @@ function anchorTo(hash) {
               >
             </li>
             <li>
+              <RouterLink
+                to="/forme-sante"
+                class="text-white/45 hover:text-white text-sm font-medium transition-colors"
+                >Forme & Santé</RouterLink
+              >
+            </li>
+            <li>
               <a
                 href="mailto:info@bussysport.ch"
                 class="text-white/45 hover:text-white text-sm font-medium transition-colors"

@@ -28,7 +28,43 @@ const ROUTES = [
   "/tournois",
   "/mentions-legales",
   "/adhesion",
+  "/forme-sante",
+  "/forme-sante/nutrition",
+  "/forme-sante/exercices",
+  "/forme-sante/etirements",
 ];
+
+// Anciennes URLs *.html du site statique d'origine. Sans fallback SPA, la
+// redirection de src/router/index.js ne s'exécute jamais en production (404) :
+// on écrit donc un petit fichier .html qui redirige vers l'URL propre.
+// (/index.html n'est pas listé : c'est déjà la page d'accueil prérendue.)
+const LEGACY_REDIRECTS = {
+  "/courses-a-pied.html": "/courses-a-pied/",
+  "/cross-training.html": "/cross-training/",
+  "/street-workout.html": "/street-workout/",
+  "/tournois.html": "/tournois/",
+  "/mentions-legales.html": "/mentions-legales/",
+  "/adhesion.html": "/adhesion/",
+};
+
+function redirectHtml(target) {
+  const url = `https://bussysport.ch${target}`;
+  return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirection – BussySport</title>
+  <meta name="robots" content="noindex" />
+  <link rel="canonical" href="${url}" />
+  <meta http-equiv="refresh" content="0; url=${target}" />
+  <script>location.replace(${JSON.stringify(target)} + location.hash);</script>
+</head>
+<body>
+  <p>Cette page a déménagé : <a href="${target}">${url}</a></p>
+</body>
+</html>
+`;
+}
 
 const MIME = {
   ".html": "text/html",
@@ -74,7 +110,9 @@ async function autoScroll(page) {
 
 async function main() {
   if (!existsSync(join(DIST, "index.html"))) {
-    throw new Error("dist/index.html introuvable — lancez `vite build` d'abord.");
+    throw new Error(
+      "dist/index.html introuvable — lancez `vite build` d'abord.",
+    );
   }
 
   // index.html original = fallback SPA pour servir n'importe quelle route.
@@ -113,7 +151,9 @@ async function main() {
         waitUntil: "networkidle0",
         timeout: 30000,
       });
-      await page.waitForSelector("#app > *", { timeout: 10000 }).catch(() => {});
+      await page
+        .waitForSelector("#app > *", { timeout: 10000 })
+        .catch(() => {});
       await autoScroll(page);
 
       const html = await page.evaluate(
@@ -126,6 +166,11 @@ async function main() {
       await writeFile(join(outDir, "index.html"), html, "utf8");
       const out = route === "/" ? "index.html" : `${route.slice(1)}/index.html`;
       console.log(`✓ prérendu ${route} → ${out}`);
+    }
+
+    for (const [from, to] of Object.entries(LEGACY_REDIRECTS)) {
+      await writeFile(join(DIST, from), redirectHtml(to), "utf8");
+      console.log(`✓ redirection ${from} → ${to}`);
     }
   } finally {
     await browser.close();

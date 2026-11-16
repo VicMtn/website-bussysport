@@ -56,7 +56,7 @@ function anchorTo(hash) {
         </div>
       </RouterLink>
 
-      <div class="hidden md:flex items-center gap-8">
+      <div class="hidden lg:flex items-center gap-6 xl:gap-8">
         <RouterLink
           :to="anchorTo('#apropos')"
           class="text-white/80 hover:text-white text-sm font-semibold tracking-wide transition-colors"
@@ -66,6 +66,22 @@ function anchorTo(hash) {
           :to="anchorTo('#activites')"
           class="text-white/80 hover:text-white text-sm font-semibold tracking-wide transition-colors"
           >Activités</RouterLink
+        >
+        <RouterLink
+          :to="anchorTo('#womens-workout')"
+          class="text-white/80 hover:text-white text-sm font-semibold tracking-wide transition-colors"
+          data-testid="nav-womens-workout"
+          >Women's Workout</RouterLink
+        >
+        <RouterLink
+          to="/forme-sante"
+          :class="[
+            'text-sm font-semibold tracking-wide transition-colors',
+            route.path.startsWith('/forme-sante')
+              ? 'text-white'
+              : 'text-white/80 hover:text-white',
+          ]"
+          >Forme & Santé</RouterLink
         >
         <RouterLink
           :to="anchorTo('#contact')"
@@ -83,7 +99,7 @@ function anchorTo(hash) {
 
       <button
         type="button"
-        class="md:hidden text-white p-2.5 rounded-xl hover:bg-white/10 transition-colors"
+        class="lg:hidden text-white p-2.5 rounded-xl hover:bg-white/10 transition-colors"
         :aria-expanded="mobileOpen"
         aria-label="Ouvrir le menu"
         data-testid="hamburger-btn"
@@ -95,7 +111,7 @@ function anchorTo(hash) {
 
     <div
       v-show="mobileOpen"
-      class="app-mobile-menu md:hidden mt-3 mx-4 rounded-2xl overflow-hidden"
+      class="app-mobile-menu lg:hidden mt-3 mx-4 rounded-2xl overflow-hidden"
       data-testid="mobile-menu"
     >
       <div class="flex flex-col py-2">
@@ -110,6 +126,18 @@ function anchorTo(hash) {
           class="px-6 py-3.5 text-white/80 hover:text-white hover:bg-white/8 font-semibold text-sm transition-all"
           @click="closeMobile"
           >Activités</RouterLink
+        >
+        <RouterLink
+          :to="anchorTo('#womens-workout')"
+          class="px-6 py-3.5 text-white/80 hover:text-white hover:bg-white/8 font-semibold text-sm transition-all"
+          @click="closeMobile"
+          >Women's Workout</RouterLink
+        >
+        <RouterLink
+          to="/forme-sante"
+          class="px-6 py-3.5 text-white/80 hover:text-white hover:bg-white/8 font-semibold text-sm transition-all"
+          @click="closeMobile"
+          >Forme & Santé</RouterLink
         >
         <RouterLink
           :to="anchorTo('#contact')"

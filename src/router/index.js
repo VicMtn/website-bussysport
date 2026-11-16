@@ -36,6 +36,29 @@ const routes = [
     name: "adhesion",
     component: () => import("@/views/AdhesionView.vue"),
   },
+  {
+    path: "/forme-sante",
+    name: "forme-sante",
+    component: () => import("@/views/FormeSanteView.vue"),
+  },
+  {
+    path: "/forme-sante/nutrition",
+    name: "forme-sante-nutrition",
+    component: () => import("@/views/SanteTopicView.vue"),
+    meta: { topic: "nutrition" },
+  },
+  {
+    path: "/forme-sante/exercices",
+    name: "forme-sante-exercices",
+    component: () => import("@/views/SanteTopicView.vue"),
+    meta: { topic: "exercices" },
+  },
+  {
+    path: "/forme-sante/etirements",
+    name: "forme-sante-etirements",
+    component: () => import("@/views/SanteTopicView.vue"),
+    meta: { topic: "etirements" },
+  },
   // Legacy .html paths from the previous static site → redirect.
   { path: "/index.html", redirect: "/" },
   { path: "/courses-a-pied.html", redirect: "/courses-a-pied" },

@@ -1,6 +1,6 @@
 <script setup>
 import { useHead } from "@unhead/vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 import { useAdhesionForm } from "@/composables/useAdhesionForm";
 import { activities } from "@/data/activities";
 
@@ -56,7 +56,7 @@ const {
   toggleActivity,
   onParentAuthChange,
   submit,
-} = useAdhesionForm();
+} = useAdhesionForm({ initialActivities: useRoute().query.activite ?? [] });
 </script>
 
 <template>
@@ -246,6 +246,7 @@ const {
       </div>
 
       <form
+        id="formulaire"
         class="bg-white p-8 sm:p-10 rounded-2xl border border-gray-100 shadow-sm space-y-10"
         novalidate
         data-testid="adhesion-form"

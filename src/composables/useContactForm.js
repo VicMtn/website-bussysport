@@ -6,6 +6,7 @@ const SUBJECT_LABELS = {
   running: 'Courses à pied',
   crosstraining: 'Cross-Training',
   streetworkout: 'Street Workout',
+  womensworkout: "Women's Workout",
   tournoi: 'Tournois de jeux',
   partenariat: 'Partenariat / Sponsor',
   autre: 'Autre demande',
@@ -16,6 +17,10 @@ const MAIL_FALLBACK_HTML =
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+export function isKnownSubject(subject) {
+  return Object.hasOwn(SUBJECT_LABELS, subject)
 }
 
 export function useContactForm({ throttle } = {}) {

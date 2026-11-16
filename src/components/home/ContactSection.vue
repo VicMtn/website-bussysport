@@ -1,8 +1,22 @@
 <script setup>
-import { useContactForm } from '@/composables/useContactForm'
+import { watch } from 'vue'
+import { isKnownSubject, useContactForm } from '@/composables/useContactForm'
+
+const props = defineProps({
+  // Sujet présélectionné (ex. `/?sujet=womensworkout#contact`).
+  initialSubject: { type: String, default: '' },
+})
 
 const { form, loading, successText, errorHtml, cooldownLeft, submit } =
   useContactForm()
+
+watch(
+  () => props.initialSubject,
+  (subject) => {
+    if (isKnownSubject(subject)) form.subject = subject
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -185,6 +199,7 @@ const { form, loading, successText, errorHtml, cooldownLeft, submit } =
                 <option value="running">Courses à pied</option>
                 <option value="crosstraining">Cross-Training</option>
                 <option value="streetworkout">Street Workout</option>
+                <option value="womensworkout">Women's Workout</option>
                 <option value="tournoi">Tournois de jeux</option>
                 <option value="partenariat">Partenariat / Sponsor</option>
                 <option value="autre">Autre demande</option>

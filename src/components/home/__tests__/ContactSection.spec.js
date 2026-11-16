@@ -144,4 +144,19 @@ describe('ContactSection.vue', () => {
       /Patientez \d+ s/,
     )
   })
+
+  it('preselects a known subject from initialSubject', () => {
+    const wrapper = mount(ContactSection, {
+      global: stubs,
+      props: { initialSubject: 'womensworkout' },
+    })
+    expect(wrapper.find('select[data-testid="contact-subject-select"]').element.value).toBe(
+      'womensworkout',
+    )
+  })
+
+  it('ignores an unknown initialSubject', () => {
+    const wrapper = mount(ContactSection, { global: stubs, props: { initialSubject: 'nope' } })
+    expect(wrapper.find('select[data-testid="contact-subject-select"]').element.value).toBe('')
+  })
 })

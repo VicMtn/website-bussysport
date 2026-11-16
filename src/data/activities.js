@@ -78,6 +78,16 @@ export const activities = [
   },
 ]
 
+/**
+ * Women's Workout — a women-only group without its own page (it lives in the
+ * #womens-workout section of the home). Selectable in the adhesion form.
+ */
+export const womensWorkout = {
+  slug: 'womens-workout',
+  label: "Women's Workout",
+  icon: 'fa-venus',
+}
+
 export function getActivity(slug) {
   return activities.find((a) => a.slug === slug)
 }

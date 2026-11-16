@@ -203,6 +203,69 @@ body {
   padding: 1.25rem;
 }
 
+/* Forme & Santé ------------------------------------------------------ */
+.sante-disclaimer {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  background: #fff6f5;
+  border: 1px solid rgba(211, 47, 47, 0.18);
+  border-left: 4px solid var(--color-swiss-red);
+  border-radius: 1rem;
+  padding: 1.15rem 1.25rem;
+}
+.sante-disclaimer-icon {
+  color: var(--color-swiss-red);
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+.sante-disclaimer-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 0.35rem;
+  line-height: 1.35;
+}
+.sante-disclaimer-text {
+  color: #3d4a5c;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.sante-note {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding-bottom: 1.15rem;
+  border-bottom: 1px solid #eef2f6;
+}
+.sante-note-index {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  background: rgba(21, 101, 192, 0.1);
+}
+.sante-topic-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.sante-topic-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(21, 101, 192, 0.12);
+}
+.sante-topic-card:focus-visible,
+.sante-disclaimer :focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
 /* Social icons -------------------------------------------------------- */
 .social-icon {
   transition: transform 0.3s ease, background 0.3s ease;

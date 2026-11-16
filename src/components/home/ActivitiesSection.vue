@@ -1,7 +1,6 @@
 <script setup>
 import { activities } from '@/data/activities'
 import ActivityCard from './ActivityCard.vue'
-import ComingSoonBanner from './ComingSoonBanner.vue'
 
 const delays = ['reveal-d1', 'reveal-d2', 'reveal-d3', 'reveal-d4']
 </script>
@@ -31,7 +30,7 @@ const delays = ['reveal-d1', 'reveal-d2', 'reveal-d3', 'reveal-d4']
         </p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-7 mb-7">
+      <div class="grid md:grid-cols-2 gap-7">
         <ActivityCard
           v-for="(activity, idx) in activities"
           :key="activity.slug"
@@ -39,8 +38,6 @@ const delays = ['reveal-d1', 'reveal-d2', 'reveal-d3', 'reveal-d4']
           :delay-class="delays[idx]"
         />
       </div>
-
-      <ComingSoonBanner />
     </div>
   </section>
 </template>

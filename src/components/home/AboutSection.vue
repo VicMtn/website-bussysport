@@ -26,7 +26,7 @@ const pillars = [
 ];
 
 const stats = [
-  { value: "10+", label: "Membres", testid: "stat-members" },
+  { value: "30+", label: "Membres", testid: "stat-members" },
   { value: "4", label: "Activités" },
   { value: "100%", label: "Bénévole" },
 ];
@@ -71,7 +71,6 @@ const stats = [
           >
             <i class="fas fa-users"></i>Rejoindre l'aventure
           </RouterLink>
-  
         </div>
 
         <div class="flex flex-col gap-5" v-reveal>

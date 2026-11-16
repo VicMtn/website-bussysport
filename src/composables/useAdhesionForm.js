@@ -1,5 +1,5 @@
 import { computed, reactive, ref } from "vue";
-import { activities } from "@/data/activities";
+import { activities, womensWorkout } from "@/data/activities";
 import { useSubmissionThrottle } from "./useSubmissionThrottle";
 
 const MAIL_FALLBACK_HTML =
@@ -30,9 +30,11 @@ const GENDER_LABELS = {
   autre: "Autre / Ne souhaite pas préciser",
 };
 
-const ACTIVITY_KEYS = activities.map((a) => a.slug);
+// Choix proposés dans le formulaire : les 4 activités + le Women's Workout.
+const ACTIVITY_OPTIONS = [...activities, womensWorkout];
+const ACTIVITY_KEYS = ACTIVITY_OPTIONS.map((a) => a.slug);
 const ACTIVITY_LABELS = Object.fromEntries(
-  activities.map((a) => [a.slug, a.label]),
+  ACTIVITY_OPTIONS.map((a) => [a.slug, a.label]),
 );
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 Mo
 const ALLOWED_FILE_TYPES = [
@@ -95,7 +97,13 @@ export function requiresParentAuthorization(age) {
   return age !== null && age >= 16 && age < 18;
 }
 
-export function useAdhesionForm({ throttle } = {}) {
+/** Garde uniquement les slugs connus, sans doublon (ex. `?activite=` dans l'URL). */
+export function sanitizeActivities(slugs) {
+  const list = Array.isArray(slugs) ? slugs : [slugs];
+  return [...new Set(list.filter((s) => ACTIVITY_KEYS.includes(s)))];
+}
+
+export function useAdhesionForm({ throttle, initialActivities = [] } = {}) {
   const form = reactive({
     firstName: "",
     lastName: "",
@@ -112,7 +120,7 @@ export function useAdhesionForm({ throttle } = {}) {
     insuranceName: "",
     medicalContraindication: "",
     medicalDetails: "",
-    activities: [],
+    activities: sanitizeActivities(initialActivities),
     emergencyRelation: "",
     emergencyName: "",
     emergencyPhone: "",
@@ -475,7 +483,7 @@ export function useAdhesionForm({ throttle } = {}) {
   return {
     form,
     activities: ACTIVITY_KEYS,
-    activityLabels: activities,
+    activityLabels: ACTIVITY_OPTIONS,
     emergencyRelations: EMERGENCY_RELATIONS,
     referralSources: REFERRAL_SOURCES,
     age,
